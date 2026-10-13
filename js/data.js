@@ -210,14 +210,14 @@ const PACKAGES = [
 /* ---------------------------------------------------------------------
    5. MONTHLY_PLANS — monthly care & growth plans (Packages page)
    ---------------------------------------------------------------------
-   `badge` adds a highlight label (e.g. "Best Value") and highlights the card.
+   `badge` adds a highlight label (e.g. "Most Complete") and highlights the card.
    "Get Started" opens WhatsApp with: "Hi Harnoor, I'm interested in the
    <name> plan."
    --------------------------------------------------------------------- */
 const MONTHLY_PLANS = [
   {
     name: "Basic Maintenance",
-    price: "₹999",
+    price: "₹4,999",
     priceNote: "/month",
     tagline: "Your website kept online, safe and up to date.",
     features: [
@@ -231,7 +231,7 @@ const MONTHLY_PLANS = [
   },
   {
     name: "SEO Growth",
-    price: "₹2,999",
+    price: "₹24,999",
     priceNote: "/month",
     tagline: "Climb higher on Google Search and Google Maps in your area.",
     features: [
@@ -245,14 +245,14 @@ const MONTHLY_PLANS = [
   },
   {
     name: "Complete Care",
-    price: "₹3,499",
+    price: "₹39,999",
     priceNote: "/month",
-    tagline: "Maintenance + SEO together, at the best price.",
+    tagline: "Maintenance + SEO together, with priority support.",
     features: [
       "Everything in Basic Maintenance and SEO Growth",
       "Priority support",
       "1 new page or blog post per month"
     ],
-    badge: "Best Value"
+    badge: "Most Complete"
   }
 ];
