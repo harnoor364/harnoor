@@ -12,6 +12,7 @@ Plain HTML, CSS and JavaScript: no build step, no frameworks. It deploys directl
 | `pricing.html` | Basic / Standard / Premium packages. "Get Started" opens WhatsApp with the package name |
 | `reviews.html` | Average rating, all reviews, and the **Leave a Review** form (Netlify Forms) |
 | `contact.html` | Contact details and the **Contact** form (Netlify Forms) |
+| `seo.html` | SEO services in Ludhiana: what's included, SEO plans, guide article and FAQ |
 | `doctors.html` | Website design for doctors & clinics: features, clinic projects and a guide |
 | `thank-you.html`, `404.html` | Form fallback page and "page not found" |
 
@@ -59,6 +60,7 @@ labelled example reviews which normal visitors never see.
 | website design company in Ludhiana | Home "What I do" section and guide article |
 | website design for doctors | `doctors.html` (title, heading, guide article); linked from Home and footer |
 | affordable website design in Ludhiana | Packages page title, heading, cost guide and FAQ (with FAQ structured data) |
+| SEO services in Ludhiana, SEO company in Ludhiana, SEO expert in Ludhiana, local SEO services, Google Business Profile optimization | `seo.html` (title, heading, guide article, FAQ with structured data) |
 | web designer near me | Comes from your **Google Business Profile**, not the website (see below) |
 
 **Google Business Profile** (for "near me" searches): create a free profile at business.google.com,

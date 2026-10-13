@@ -212,10 +212,12 @@
         priceCard(p, p.popular ? "Most Popular" : "", `Hi Harnoor! I'm interested in the ${p.name} package (${p.price}). Can you tell me more?`)
       ).join("");
     }
-    const plans = $("[data-plans]");
-    if (plans && typeof MONTHLY_PLANS !== "undefined") {
-      plans.innerHTML = MONTHLY_PLANS.map((p) => priceCard(p, p.badge, `Hi Harnoor, I'm interested in the ${p.name} plan.`)).join("");
-    }
+    if (typeof MONTHLY_PLANS === "undefined") return;
+    $$("[data-plans]").forEach((el) => {
+      // data-plans="seo" (SEO page) shows only the plans that include SEO
+      const list = el.getAttribute("data-plans") === "seo" ? MONTHLY_PLANS.filter((p) => /seo|complete/i.test(p.name)) : MONTHLY_PLANS;
+      el.innerHTML = list.map((p) => priceCard(p, p.badge, `Hi Harnoor, I'm interested in the ${p.name} plan.`)).join("");
+    });
   }
 
   /* ---------- Scroll reveal animations ---------- */
