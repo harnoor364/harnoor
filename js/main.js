@@ -50,11 +50,6 @@
     $$('[data-site="email-text"]').forEach((el) => (el.textContent = SITE.email));
     $$('[data-site="phone-text"]').forEach((el) => (el.textContent = SITE.phoneDisplay));
     $$('[data-site="location-text"]').forEach((el) => (el.textContent = SITE.location));
-    $$("[data-social]").forEach((el) => {
-      const url = safeUrl(SITE.social[el.getAttribute("data-social")]);
-      if (url) el.href = url;
-      else el.remove();
-    });
     $$("[data-year]").forEach((el) => (el.textContent = new Date().getFullYear()));
   }
 
@@ -196,24 +191,31 @@
     });
   }
 
-  /* ---------- Pricing cards ---------- */
-  function renderPricing() {
-    const el = $("[data-pricing]");
-    if (!el) return;
-    el.innerHTML = PACKAGES.map((p) => {
-      const msg = `Hi Harnoor! I'm interested in the ${p.name} package (${p.price}). Can you tell me more?`;
-      return `
-        <article class="card price-card reveal${p.popular ? " popular" : ""}">
-          ${p.popular ? '<span class="badge-popular">Most Popular</span>' : ""}
+  /* ---------- Pricing cards (website packages + monthly plans) ---------- */
+  // One card; `badge` (e.g. "Most Popular") highlights it.
+  const priceCard = (p, badge, msg) => `
+        <article class="card price-card reveal${badge ? " popular" : ""}">
+          ${badge ? `<span class="badge-popular">${esc(badge)}</span>` : ""}
           <h3>${esc(p.name)}</h3>
           <p class="price-tagline">${esc(p.tagline)}</p>
           <p class="price"><span>${esc(p.price)}</span><small>${esc(p.priceNote)}</small></p>
           <ul class="price-features">
             ${p.features.map((f) => `<li>${ICON.check}<span>${esc(f)}</span></li>`).join("")}
           </ul>
-          <a class="btn ${p.popular ? "btn-primary" : "btn-outline"} btn-block" href="${waLink(msg)}" target="_blank" rel="noopener">Get Started</a>
+          <a class="btn ${badge ? "btn-primary" : "btn-outline"} btn-block" href="${waLink(msg)}" target="_blank" rel="noopener">Get Started</a>
         </article>`;
-    }).join("");
+
+  function renderPricing() {
+    const packages = $("[data-pricing]");
+    if (packages) {
+      packages.innerHTML = PACKAGES.map((p) =>
+        priceCard(p, p.popular ? "Most Popular" : "", `Hi Harnoor! I'm interested in the ${p.name} package (${p.price}). Can you tell me more?`)
+      ).join("");
+    }
+    const plans = $("[data-plans]");
+    if (plans && typeof MONTHLY_PLANS !== "undefined") {
+      plans.innerHTML = MONTHLY_PLANS.map((p) => priceCard(p, p.badge, `Hi Harnoor, I'm interested in the ${p.name} plan.`)).join("");
+    }
   }
 
   /* ---------- Scroll reveal animations ---------- */

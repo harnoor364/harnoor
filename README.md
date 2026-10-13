@@ -19,12 +19,14 @@ Plain HTML, CSS and JavaScript: no build step, no frameworks. It deploys directl
 
 Almost everything you'll want to change is in **`js/data.js`**:
 
-- **`SITE`**: WhatsApp number, email, location, Instagram/LinkedIn links.
+- **`SITE`**: WhatsApp number, email and location.
 - **`PROJECTS`**: portfolio cards. To add a project, copy one `{ ... }` block and change the values.
   `featured: true` also puts it on the Home page (max 3). Leave `url: ""` until the site is live
   (the button then shows "Live link coming soon").
 - **`REVIEWS`**: approved reviews (see below). `featured: true` puts a review on the Home page (max 2).
-- **`PACKAGES`**: pricing cards, prices and what each package includes.
+- **`PACKAGES`**: website package cards, prices and what each package includes.
+- **`MONTHLY_PLANS`**: the Monthly Care & Growth Plans (Basic Maintenance, SEO Growth, Complete Care) on the Packages page.
+  `badge: "Best Value"` highlights a card. The contract note below the cards is in `pricing.html`.
 
 To change page text (headlines, paragraphs), edit it directly in the `.html` files.
 To change colours or fonts, edit the variables at the top of `css/style.css` (`--accent` is the brand blue).

@@ -1,10 +1,11 @@
 /* =====================================================================
    SITE DATA — this is the ONE file you edit to update the website.
    ---------------------------------------------------------------------
-   1. SITE      → your contact details & social links
+   1. SITE      → your contact details
    2. PROJECTS  → portfolio cards (Home + Portfolio pages)
    3. REVIEWS   → approved client reviews (Home + Reviews pages)
-   4. PACKAGES  → pricing cards (Packages page)
+   4. PACKAGES  → website package cards (Packages page)
+   5. MONTHLY_PLANS → monthly care & SEO plan cards (Packages page)
 
    Tips
    - Keep the commas between items: { ... }, { ... }
@@ -27,14 +28,7 @@ const SITE = {
 
   // Message pre-filled when someone taps a general WhatsApp button
   defaultWhatsAppMessage:
-    "Hi Harnoor! I saw your website and I'd like to know more about getting a website for my business.",
-
-  // Social links — replace with your real profile URLs.
-  // Leave a link as "" to hide that icon.
-  social: {
-    instagram: "https://www.instagram.com/",
-    linkedin: "https://www.linkedin.com/"
-  }
+    "Hi Harnoor! I saw your website and I'd like to know more about getting a website for my business."
 };
 
 
@@ -209,5 +203,56 @@ const PACKAGES = [
       "3 months of free support"
     ],
     popular: false
+  }
+];
+
+
+/* ---------------------------------------------------------------------
+   5. MONTHLY_PLANS — monthly care & growth plans (Packages page)
+   ---------------------------------------------------------------------
+   `badge` adds a highlight label (e.g. "Best Value") and highlights the card.
+   "Get Started" opens WhatsApp with: "Hi Harnoor, I'm interested in the
+   <name> plan."
+   --------------------------------------------------------------------- */
+const MONTHLY_PLANS = [
+  {
+    name: "Basic Maintenance",
+    price: "₹999",
+    priceNote: "/month",
+    tagline: "Your website kept online, safe and up to date.",
+    features: [
+      "Hosting & uptime monitoring",
+      "Small text/image updates (up to 5 changes per month)",
+      "Monthly backups",
+      "Security & broken-link checks",
+      "WhatsApp support"
+    ],
+    badge: ""
+  },
+  {
+    name: "SEO Growth",
+    price: "₹2,999",
+    priceNote: "/month",
+    tagline: "Climb higher on Google Search and Google Maps in your area.",
+    features: [
+      "Google Business Profile optimization & monthly posts",
+      "Keyword research for your area (e.g. \"dentist in Ludhiana\")",
+      "On-page SEO: titles, meta descriptions, headings",
+      "Local listings/citations setup",
+      "Monthly ranking & traffic report"
+    ],
+    badge: ""
+  },
+  {
+    name: "Complete Care",
+    price: "₹3,499",
+    priceNote: "/month",
+    tagline: "Maintenance + SEO together, at the best price.",
+    features: [
+      "Everything in Basic Maintenance and SEO Growth",
+      "Priority support",
+      "1 new page or blog post per month"
+    ],
+    badge: "Best Value"
   }
 ];
