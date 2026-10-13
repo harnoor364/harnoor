@@ -30,7 +30,7 @@ Almost everything you'll want to change is in **`js/data.js`**:
   `badge: "Best Value"` highlights a card. The contract note below the cards is in `pricing.html`.
 
 To change page text (headlines, paragraphs), edit it directly in the `.html` files.
-To change colours or fonts, edit the variables at the top of `css/style.css` (`--accent` is the brand blue).
+To change colours or fonts, edit the variables at the top of `css/style.css` (`--accent` is the brand brown, `--bg` the cream background).
 
 ### Project screenshots
 
