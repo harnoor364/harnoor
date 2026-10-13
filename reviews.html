@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en-IN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Client Reviews | Harnoor Singh — Website Designer, Ludhiana</title>
+  <meta name="description" content="Read what clients say about working with Harnoor Singh, or leave a review of your own website project.">
+  <link rel="canonical" href="https://harnoorsingh.netlify.app/reviews.html">
+  <meta name="theme-color" content="#2563EB">
+
+  <!-- Open Graph: controls the preview when this link is shared on WhatsApp / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Harnoor Singh · Web Design">
+  <meta property="og:locale" content="en_IN">
+  <meta property="og:title" content="Client Reviews | Harnoor Singh — Website Designer, Ludhiana">
+  <meta property="og:description" content="Read what clients say about working with Harnoor Singh, or leave a review of your own website project.">
+  <meta property="og:url" content="https://harnoorsingh.netlify.app/reviews.html">
+  <meta property="og:image" content="https://harnoorsingh.netlify.app/images/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Harnoor Singh — Websites that bring your business more customers">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Client Reviews | Harnoor Singh — Website Designer, Ludhiana">
+  <meta name="twitter:description" content="Read what clients say about working with Harnoor Singh, or leave a review of your own website project.">
+  <meta name="twitter:image" content="https://harnoorsingh.netlify.app/images/og-image.jpg">
+
+  <link rel="icon" href="images/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+
+  <!-- Font: Inter (Google Fonts) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/style.css">
+  <noscript><style>.reveal { opacity: 1; transform: none; }</style></noscript>
+  <script src="js/data.js" defer></script>
+  <script src="js/main.js" defer></script>
+</head>
+<body data-page="reviews">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <!-- ================= HEADER / NAVBAR ================= -->
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a href="index.html" class="logo" aria-label="Harnoor Singh Web Design — home">
+        <span class="logo-mark">HS</span>
+        <span class="logo-text">Harnoor Singh<small>Web Design</small></span>
+      </a>
+      <nav class="main-nav" id="main-nav" aria-label="Main">
+        <ul>
+          <li><a href="index.html" data-nav="home">Home</a></li>
+          <li><a href="portfolio.html" data-nav="portfolio">Portfolio</a></li>
+          <li><a href="pricing.html" data-nav="pricing">Packages</a></li>
+          <li><a href="reviews.html" data-nav="reviews">Reviews</a></li>
+          <li><a href="contact.html" data-nav="contact">Contact</a></li>
+        </ul>
+        <a href="contact.html" class="btn btn-primary btn-sm nav-cta">Get a Website</a>
+      </nav>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="main-nav" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <main id="main">
+
+    <section class="page-hero">
+      <div class="container">
+        <span class="eyebrow">Reviews</span>
+        <h1>What my clients say</h1>
+        <p>Honest feedback from businesses I've built websites for.</p>
+      </div>
+    </section>
+
+    <section class="section" style="padding-top:24px">
+      <div class="container">
+        <!-- Average rating + review cards are created from the REVIEWS list in js/data.js -->
+        <div class="rating-summary reveal" data-rating-summary></div>
+        <div class="review-grid cols-3" data-reviews="all"></div>
+      </div>
+    </section>
+
+    <!-- ================= LEAVE A REVIEW (Netlify Forms) =================
+         Submissions go to your Netlify dashboard → Forms → "review".
+         They are NOT published automatically: copy approved ones into
+         REVIEWS in js/data.js. -->
+    <section class="section section-soft" id="leave-review">
+      <div class="container" style="max-width:760px">
+        <div class="section-head reveal">
+          <span class="eyebrow">Worked with me?</span>
+          <h2>Leave a review</h2>
+          <p>Your feedback helps other business owners. Reviews appear on the site after approval.</p>
+        </div>
+
+        <form class="form-card reveal" name="review" method="POST" action="/thank-you.html"
+              data-netlify="true" netlify-honeypot="bot-field" enctype="multipart/form-data"
+              data-ajax-form data-success="review-success">
+          <input type="hidden" name="form-name" value="review">
+          <p class="hidden-field"><label>Leave this empty: <input name="bot-field" tabindex="-1" autocomplete="off"></label></p>
+
+          <div class="form-grid">
+            <div class="field">
+              <label for="r-name">Your name</label>
+              <input id="r-name" name="name" type="text" autocomplete="name" required>
+            </div>
+            <div class="field">
+              <label for="r-business">Business name</label>
+              <input id="r-business" name="business" type="text" autocomplete="organization" required>
+            </div>
+            <div class="field full">
+              <label for="r-website">Website link <span class="opt">(optional)</span></label>
+              <input id="r-website" name="website" type="url" placeholder="https://" inputmode="url">
+            </div>
+            <fieldset class="field full">
+              <legend>Star rating</legend>
+              <div class="star-input"><input type="radio" id="star5" name="rating" value="5" required><label for="star5" title="5 stars"><span class="visually-hidden">5 stars</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></label><input type="radio" id="star4" name="rating" value="4"><label for="star4" title="4 stars"><span class="visually-hidden">4 stars</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></label><input type="radio" id="star3" name="rating" value="3"><label for="star3" title="3 stars"><span class="visually-hidden">3 stars</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></label><input type="radio" id="star2" name="rating" value="2"><label for="star2" title="2 stars"><span class="visually-hidden">2 stars</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></label><input type="radio" id="star1" name="rating" value="1"><label for="star1" title="1 star"><span class="visually-hidden">1 star</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></label></div>
+              <span class="star-input-label" aria-live="polite">Tap a star to rate</span>
+            </fieldset>
+            <div class="field full">
+              <label for="r-text">Your review</label>
+              <textarea id="r-text" name="review" required minlength="10" placeholder="How was working together? How is the website helping your business?"></textarea>
+            </div>
+            <div class="field full">
+              <label for="r-photo">Photo or logo <span class="opt">(optional)</span></label>
+              <input id="r-photo" name="photo" type="file" accept="image/*">
+              <p class="field-hint">JPG or PNG, up to 8 MB.</p>
+            </div>
+          </div>
+          <div class="form-submit"><button class="btn btn-primary btn-lg btn-block" type="submit">Submit Review</button></div>
+          <p class="form-status" role="alert"></p>
+        </form>
+
+        <div class="form-success" id="review-success" tabindex="-1" hidden>
+          <div class="success-icon"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
+          <h3>Thank you!</h3>
+          <p>Your review will appear after approval.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="logo">
+          <span class="logo-mark">HS</span>
+          <span class="logo-text">Harnoor Singh<small>Web Design</small></span>
+        </a>
+        <p>Website designer in Ludhiana, Punjab. Affordable, mobile-friendly websites for clinics, shops, restaurants and service businesses across India.</p>
+        <div class="socials">
+          <a href="#" data-social="instagram" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><path d="M17.5 6.5h.01"/></svg></a>
+          <a href="#" data-social="linkedin" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a>
+        </div>
+      </div>
+      <div>
+        <h3>Quick Links</h3>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="portfolio.html">Portfolio</a></li>
+          <li><a href="pricing.html">Packages &amp; Pricing</a></li>
+          <li><a href="reviews.html">Reviews</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Services</h3>
+        <ul>
+          <li><a href="pricing.html">Business Websites</a></li>
+          <li><a href="doctors.html">Websites for Doctors &amp; Clinics</a></li>
+          <li><a href="pricing.html">Mobile-Friendly Design</a></li>
+          <li><a href="pricing.html">Google Maps &amp; SEO Setup</a></li>
+          <li><a href="pricing.html">WhatsApp &amp; Booking Integration</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Contact</h3>
+        <ul class="footer-contact">
+          <li><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg><a href="https://wa.me/917973353244" data-wa="Hi Harnoor! I saw your website and I'd like to know more about getting a website for my business." target="_blank" rel="noopener">WhatsApp: <span data-site="phone-text">+91 79733 53244</span></a></li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg><a href="mailto:harnoor459456@gmail.com" data-site="email">harnoor459456@gmail.com</a></li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg><span data-site="location-text">Ludhiana, Punjab, India</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="container footer-bottom">
+      <span>&copy; <span data-year>2026</span> Harnoor Singh. All rights reserved.</span>
+      <span>Designed &amp; built in Ludhiana</span>
+    </div>
+  </footer>
+
+  <!-- Floating WhatsApp button (every page) -->
+  <a class="wa-float" href="https://wa.me/917973353244" data-wa="Hi Harnoor! I saw your website and I'd like to know more about getting a website for my business." target="_blank" rel="noopener" aria-label="Chat with Harnoor on WhatsApp">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg><span class="wa-float-label">Chat with me</span>
+  </a>
+</body>
+</html>
