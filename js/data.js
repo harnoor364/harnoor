@@ -42,7 +42,8 @@ const SITE = {
      category:    "Dental Clinic",            // small label on the card
      location:    "Ludhiana",                 // optional
      description: "One or two short sentences about the project.",
-     image:       "images/projects/my-project.webp",  // screenshot (1200×750 works best)
+     image:       "images/projects/my-project-desktop.webp",  // desktop screenshot (1200×750 works best)
+     mobileImage: "images/projects/my-project-mobile.webp",   // optional phone screenshot (390×844)
      url:         "https://client-site.netlify.app",  // live link ("" = shows "Live link coming soon")
      tags:        ["Appointment Booking", "Google Maps"],
      featured:    true,                       // true = also shown on the Home page (max 3)
@@ -58,9 +59,36 @@ const PROJECTS = [
     location: "Ludhiana",
     description:
       "A calm, trustworthy website for a pediatrician's clinic. Parents can see services, clinic timings and fees, and request an appointment in a few taps.",
-    image: "images/projects/pediatric-clinic.svg",
+    image: "images/projects/pediatric-clinic-desktop.webp",
+    mobileImage: "images/projects/pediatric-clinic-mobile.webp",
     url: "", // ← paste the live link here
     tags: ["Appointment Request", "Google Maps", "Click-to-Call", "Parent FAQs", "Mobile Friendly"],
+    featured: true,
+    note: ""
+  },
+  {
+    title: "Grace Unisex Salon",
+    category: "Salon",
+    location: "Ludhiana",
+    description:
+      "A warm, elegant single-page website for a unisex salon in Omaxe Market, Pakhowal Road. Clients can browse services and book on WhatsApp or call in one tap.",
+    image: "images/projects/grace-unisex-salon-desktop.webp",
+    mobileImage: "images/projects/grace-unisex-salon-mobile.webp",
+    url: "https://gracesalon.vercel.app/",
+    tags: ["WhatsApp Booking", "Click-to-Call", "Google Reviews", "Services Menu", "Mobile Friendly"],
+    featured: true,
+    note: ""
+  },
+  {
+    title: "Akash Pandey Tuitions",
+    category: "Tuition Classes",
+    location: "",
+    description:
+      "A website for a Physics & Chemistry tutor (Class 11–12, Boards, JEE, NEET) with an AI test-paper analyser that turns a photo of a test into a study plan.",
+    image: "images/projects/akash-pandey-tuitions-desktop.webp",
+    mobileImage: "images/projects/akash-pandey-tuitions-mobile.webp",
+    url: "",
+    tags: ["AI Test Analyser", "Demo Class Booking", "Lead Capture", "Testimonials", "Mobile Friendly"],
     featured: true,
     note: ""
   },
@@ -70,10 +98,11 @@ const PROJECTS = [
     location: "",
     description:
       "A modern website for a family physician, with a 3D layered hero, services, patient information, insurance details and an appointment request form.",
-    image: "images/projects/family-practice.svg",
+    image: "images/projects/family-practice-desktop.webp",
+    mobileImage: "images/projects/family-practice-mobile.webp",
     url: "",
     tags: ["Appointment Request", "Patient FAQs", "Directions", "Accessibility", "SEO Setup"],
-    featured: true,
+    featured: false,
     note: ""
   },
   {
@@ -82,10 +111,11 @@ const PROJECTS = [
     location: "",
     description:
       "A cinematic restaurant website concept: a 3D scroll walk from the street into the restaurant, menus, events and catering pages.",
-    image: "images/projects/bbq-restaurant.svg",
+    image: "images/projects/bbq-restaurant-desktop.webp",
+    mobileImage: "images/projects/bbq-restaurant-mobile.webp",
     url: "",
     tags: ["3D Scroll Experience", "Menu Pages", "Catering Enquiry", "Events", "15 Pages"],
-    featured: true,
+    featured: false,
     note: "Concept"
   },
   {
