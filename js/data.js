@@ -251,7 +251,7 @@ const MONTHLY_PLANS = [
     priceNote: "/month",
     tagline: "Your website kept online, safe and up to date.",
     features: [
-      "Hosting & uptime monitoring",
+      "Uptime monitoring (hosting paid separately)",
       "Small text/image updates (up to 5 changes per month)",
       "Monthly backups",
       "Security & broken-link checks",
