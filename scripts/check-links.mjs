@@ -17,8 +17,9 @@ function checkRef(from, ref) {
   if (!ref || /^(https?:|mailto:|tel:|data:|javascript:|#$)/i.test(ref)) return;
   const [rawPath, hash] = ref.split("#");
   const clean = rawPath.split("?")[0].replace(/^\//, "");
-  const target = clean === "" ? from : clean;
-  if (clean && !fs.existsSync(path.join(ROOT, clean))) {
+  const resolved = clean && !fs.existsSync(path.join(ROOT, clean)) && fs.existsSync(path.join(ROOT, clean + ".html")) ? clean + ".html" : clean; // clean URLs
+  const target = resolved === "" ? (rawPath === "/" ? "index.html" : from) : resolved;
+  if (resolved && !fs.existsSync(path.join(ROOT, resolved))) {
     broken.push({ page: from, ref, problem: "file not found" });
     return;
   }

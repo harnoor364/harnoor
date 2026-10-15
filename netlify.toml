@@ -29,6 +29,20 @@
   [headers.values]
     Cache-Control = "public, max-age=86400, must-revalidate"
 
+# ---------------------------------------------------------------------------
+# Domain: the old Netlify address permanently redirects to the real domain.
+[[redirects]]
+  from = "https://harnoorsingh.netlify.app/*"
+  to = "https://harnoorsingh.in/:splat"
+  status = 301
+  force = true
+# The site's actual Netlify address (from the Netlify deploy checks) also redirects.
+[[redirects]]
+  from = "https://cerulean-muffin-934237.netlify.app/*"
+  to = "https://harnoorsingh.in/:splat"
+  status = 301
+  force = true
+
 # Internal project files (checks, tests, docs, config) are in the repository
 # but must not be downloadable from the live website.
 [[redirects]]
@@ -86,3 +100,102 @@
   to = "/404.html"
   status = 404
   force = true
+
+# ---------------------------------------------------------------------------
+# Clean URLs: /page.html -> /page (301), and /page serves page.html (200).
+# Pretty URLs is not enabled in this project, so these rules do it explicitly.
+[[redirects]]
+  from = "/index.html"
+  to = "/"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/portfolio.html"
+  to = "/portfolio"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/portfolio"
+  to = "/portfolio.html"
+  status = 200
+[[redirects]]
+  from = "/pricing.html"
+  to = "/pricing"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/pricing"
+  to = "/pricing.html"
+  status = 200
+[[redirects]]
+  from = "/seo.html"
+  to = "/seo"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/seo"
+  to = "/seo.html"
+  status = 200
+[[redirects]]
+  from = "/reviews.html"
+  to = "/reviews"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/reviews"
+  to = "/reviews.html"
+  status = 200
+[[redirects]]
+  from = "/contact.html"
+  to = "/contact"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/contact"
+  to = "/contact.html"
+  status = 200
+[[redirects]]
+  from = "/doctors.html"
+  to = "/doctors"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/doctors"
+  to = "/doctors.html"
+  status = 200
+[[redirects]]
+  from = "/restaurants.html"
+  to = "/restaurants"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/restaurants"
+  to = "/restaurants.html"
+  status = 200
+[[redirects]]
+  from = "/shops.html"
+  to = "/shops"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/shops"
+  to = "/shops.html"
+  status = 200
+[[redirects]]
+  from = "/services.html"
+  to = "/services"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/services"
+  to = "/services.html"
+  status = 200
+[[redirects]]
+  from = "/thank-you.html"
+  to = "/thank-you"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/thank-you"
+  to = "/thank-you.html"
+  status = 200

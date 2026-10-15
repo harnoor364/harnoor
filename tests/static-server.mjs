@@ -21,6 +21,7 @@ http.createServer((req, res) => {
   let file = path.normalize(path.join(ROOT, decodeURIComponent(url.pathname)));
   if (!file.startsWith(ROOT)) { res.writeHead(403).end(); return; }
   if (fs.existsSync(file) && fs.statSync(file).isDirectory()) file = path.join(file, "index.html");
+  else if (!fs.existsSync(file) && fs.existsSync(file + ".html")) file += ".html"; // clean URLs, as on Netlify
   for (const [k, v] of HEADERS) res.setHeader(k, v);
   if (req.method === "POST") { res.writeHead(404).end(); return; } // Netlify Forms only exist on Netlify
   if (!fs.existsSync(file)) { res.writeHead(404, { "Content-Type": TYPES[".html"] }); fs.createReadStream(path.join(ROOT, "404.html")).pipe(res); return; }

@@ -91,9 +91,18 @@ for (const f of tracked) {
 }
 check("no-env-files", !tracked.some((f) => /(^|\/)\.env(\.|$)/.test(f) && !f.endsWith(".example")), ".env files must not be committed", "critical");
 
-/* ---------- 6. Placeholder domain (warning only) ---------- */
-const placeholder = pages.filter((f) => read(f).includes("harnoorsingh.netlify.app"));
-check("real-domain-set", placeholder.length === 0, `Placeholder domain harnoorsingh.netlify.app is still used in ${placeholder.length} pages`, "info");
+/* ---------- 6. Domain + canonical URLs (SEO) ---------- */
+const DOMAIN = "https://harnoorsingh.in";
+for (const f of pages) {
+  const html = read(f);
+  check(`no-netlify-app:${f}`, !html.includes("netlify.app"), `${f}: still references a .netlify.app address`, "high");
+  if (f === "404.html") continue;
+  const want = f === "index.html" ? `${DOMAIN}/` : `${DOMAIN}/${f.replace(/\.html$/, "")}`;
+  const canon = (html.match(/<link rel="canonical" href="([^"]*)"/) || [])[1];
+  check(`canonical:${f}`, canon === want, `${f}: canonical should be ${want} (found ${canon || "none"})`, "high");
+}
+check("sitemap-domain", read("sitemap.xml").includes(`<loc>${DOMAIN}/</loc>`) && !read("sitemap.xml").includes(".html"), "sitemap.xml must list clean https://harnoorsingh.in URLs", "high");
+check("robots-sitemap", read("robots.txt").includes(`Sitemap: ${DOMAIN}/sitemap.xml`), "robots.txt must point to the harnoorsingh.in sitemap", "high");
 
 /* ---------- Report ---------- */
 const failed = results.filter((r) => !r.ok);

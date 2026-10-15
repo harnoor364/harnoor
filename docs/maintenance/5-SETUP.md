@@ -3,7 +3,7 @@
 ## One-time setup (about 20 minutes)
 1. **Review and merge** the pull request that adds this system (GitHub → Pull requests).
 2. **Live site address** → GitHub repo → **Settings → Secrets and variables → Actions → Variables** →
-   New variable `SITE_URL` = your live address, e.g. `https://your-site.netlify.app` (no trailing slash).
+   New variable `SITE_URL` = your live address, `https://harnoorsingh.in` (no trailing slash).
 3. **Claude API key** → create one at **console.anthropic.com** → API keys (add a payment method and a
    monthly spend limit, e.g. US$5, under Billing → Limits). Then GitHub → **Settings → Secrets and
    variables → Actions → Secrets** → New secret `ANTHROPIC_API_KEY`.

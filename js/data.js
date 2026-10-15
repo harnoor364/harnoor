@@ -44,7 +44,7 @@ const SITE = {
      description: "One or two short sentences about the project.",
      image:       "images/projects/my-project-desktop.webp",  // desktop screenshot (1200×750 works best)
      mobileImage: "images/projects/my-project-mobile.webp",   // optional phone screenshot (390×844)
-     url:         "https://client-site.netlify.app",  // live link ("" = shows "Live link coming soon")
+     url:         "https://client-site.com",  // live link ("" = shows "Live link coming soon")
      tags:        ["Appointment Booking", "Google Maps"],
      featured:    true,                       // true = also shown on the Home page (max 3)
      note:        ""                          // optional small badge, e.g. "Concept"
@@ -155,7 +155,7 @@ const REVIEWS = [
 ];
 
 /* Example reviews — ONLY shown when you open a page with ?preview at the
-   end of the address (e.g. reviews.html?preview), so you can see how
+   end of the address (e.g. /reviews?preview), so you can see how
    review cards look before you have real ones. Visitors never see these. */
 const SAMPLE_REVIEWS = [
   {

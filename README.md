@@ -78,7 +78,7 @@ assessment, plan, incident format, the safe AI workflow, **setup steps and costs
 ```bash
 npm ci && npx playwright install chromium   # one-time
 npm test                                    # all checks: config, links, HTML, unit + browser tests
-SITE_URL=https://your-site.netlify.app npm run monitor   # check the live site
+SITE_URL=https://harnoorsingh.in npm run monitor   # check the live site
 ```
 
 None of these files are served to visitors (blocked in `netlify.toml`).
@@ -110,18 +110,18 @@ None of these files are served to visitors (blocked in `netlify.toml`).
 3. Deploy. Netlify finds the two forms (`contact` and `review`) automatically.
    In **Forms → Form notifications** you can turn on email notifications.
 
-### After you have your final web address
+### Web address
 
-Search the project for `harnoorsingh.netlify.app` and replace it with your real domain in all `.html`
-files, `robots.txt` and `sitemap.xml`. These URLs drive the WhatsApp / Facebook link previews (Open Graph).
+The live domain is **https://harnoorsingh.in**. Page addresses, link previews (Open Graph), the sitemap and robots.txt all use it,
+with clean URLs (`/doctors`, not `/doctors.html`). `netlify.toml` permanently redirects the old Netlify address and `.html` URLs.
 
 ## Previewing locally
 
-Open `index.html` in a browser, or run a small server so all links behave like on Netlify:
+Run a small server that understands clean URLs (`/doctors` → `doctors.html`), like Netlify:
 
 ```bash
-python3 -m http.server 8000
-# then visit http://localhost:8000
+npx serve .
+# then visit the address it prints (usually http://localhost:3000)
 ```
 
 (Forms send through Netlify Forms when hosted on Netlify. On any other host, such as Vercel, they open WhatsApp with the details filled in instead.)

@@ -21,7 +21,7 @@ automated checks added in this change. No production data was accessed.
 |---|---|---|---|
 | 1 | Changes went straight to `main`/live with no review or tests | High | **Fixed in code** (CI checks, AI changes only as draft PRs). **You must** turn on branch protection: see SETUP step 4 |
 | 2 | Netlify form detection may be off, so submissions could be lost | High 🔶 | **You must check** Netlify → Forms (SETUP step 6) |
-| 3 | Placeholder domain `harnoorsingh.netlify.app` used in 61 places | High | Open: send your real address; the config check warns until fixed |
+| 3 | Placeholder domain `harnoorsingh.netlify.app` used in 61 places | High | **Fixed:** site moved to https://harnoorsingh.in with clean URLs; canonicals, sitemap and robots.txt are enforced by `check-config` |
 | 4 | No privacy notice although forms collect personal data (DPDP Act 2023) | Medium | Open: add a privacy page (human/legal decision) |
 | 5 | Header/footer copied into 12 pages can drift apart | Medium | **Mitigated:** `check-config` fails if any copy differs |
 | 6 | Client screenshots show names/contact details without documented consent | Medium | Open: get consent or blur (human decision) |

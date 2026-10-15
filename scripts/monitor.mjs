@@ -21,12 +21,12 @@ const SITE_URL = (process.env.SITE_URL || "").replace(/\/+$/, "");
 // MONITOR_LOCAL_TEST=1 allows http://127.0.0.1 (used by the unit tests only)
 const LOCAL_TEST = process.env.MONITOR_LOCAL_TEST === "1" && /^http:\/\/127\.0\.0\.1:\d+$/.test(SITE_URL);
 if (!LOCAL_TEST && !/^https:\/\/[a-z0-9.-]+$/i.test(SITE_URL)) {
-  console.error("SITE_URL must be set to your live https address, e.g. https://example.netlify.app (Settings → Secrets and variables → Actions → Variables).");
+  console.error("SITE_URL must be set to your live https address, e.g. https://harnoorsingh.in (Settings → Secrets and variables → Actions → Variables).");
   process.exit(2);
 }
 const SLOW_MS = Number(process.env.SLOW_MS || 4000);
 const TIMEOUT_MS = 15000;
-const PAGES = ["/", "/portfolio.html", "/pricing.html", "/seo.html", "/reviews.html", "/contact.html", "/doctors.html", "/restaurants.html", "/shops.html", "/services.html"];
+const PAGES = ["/", "/portfolio", "/pricing", "/seo", "/reviews", "/contact", "/doctors", "/restaurants", "/shops", "/services"];
 const MUST_MATCH_REPO = ["js/main.js", "js/data.js", "css/style.css"];
 const MUST_BE_BLOCKED = ["/README.md", "/package.json", "/scripts/monitor.mjs", "/netlify.toml"];
 const REQUIRED_HEADERS = { "content-security-policy": "frame-ancestors 'none'", "x-frame-options": "DENY", "x-content-type-options": "nosniff", "strict-transport-security": "max-age=" };
@@ -67,6 +67,15 @@ for (const p of MUST_BE_BLOCKED) {
   add(`blocked${p}`, r.status === 404 || (r.status === 200 && /<p class="big-code">404<\/p>/.test(r.body) && /^\s*<!DOCTYPE html>/i.test(r.body)), `${p} is publicly downloadable (HTTP ${r.status})`, "medium");
 }
 
+// 2b. Old .html addresses must permanently redirect to clean URLs
+for (const [from, to] of [["/doctors.html", "/doctors"], ["/pricing.html", "/pricing"]]) {
+  try {
+    const r = await fetch(SITE_URL + from, { redirect: "manual", signal: AbortSignal.timeout(TIMEOUT_MS) });
+    const loc = r.headers.get("location") || "";
+    add(`redirect${from}`, r.status === 301 && new URL(loc, SITE_URL).pathname === to, `${from} should 301 to ${to} (got ${r.status} ${loc})`, "medium");
+  } catch (e) { add(`redirect${from}`, false, `${from}: ${e.message}`, "medium"); }
+}
+
 // 3. Unexpected code changes: live files must match the repository
 for (const f of MUST_MATCH_REPO) {
   const r = await get("/" + f);
@@ -77,7 +86,7 @@ for (const f of MUST_MATCH_REPO) {
 }
 
 // 4. Forms still present on the live pages
-for (const [p, name] of [["/contact.html", "contact"], ["/reviews.html", "review"]]) {
+for (const [p, name] of [["/contact", "contact"], ["/reviews", "review"]]) {
   const r = await get(p);
   add(`form:${name}`, r.status === 200 && new RegExp(`<form[^>]*name="${name}"`).test(r.body) && r.body.includes('name="bot-field"'), `${p}: the ${name} form or its spam trap is missing`, "high");
 }

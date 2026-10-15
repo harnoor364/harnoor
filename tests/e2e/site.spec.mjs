@@ -13,9 +13,10 @@ for (const name of PAGES) {
     page.on("pageerror", (e) => problems.push(`JS error: ${e.message}`));
     page.on("console", (m) => { if (m.type() === "error" && !IGNORE.test(m.text())) problems.push(`console: ${m.text()}`); });
     page.on("requestfailed", (r) => { if (!IGNORE.test(r.url())) problems.push(`request failed: ${r.url()}`); });
-    page.on("response", (r) => { if (r.status() >= 400 && !r.url().endsWith(`/${name}.html`)) problems.push(`HTTP ${r.status()}: ${r.url()}`); });
+    page.on("response", (r) => { if (r.status() >= 400 && !/\/404\.html$/.test(r.url())) problems.push(`HTTP ${r.status()}: ${r.url()}`); });
 
-    const res = await page.goto(`/${name}.html`);
+    const url = name === "index" ? "/" : name === "404" ? "/404.html" : `/${name}`;
+    const res = await page.goto(url);
     expect(res.status(), "page status").toBe(name === "404" ? 200 : 200);
     await page.waitForLoadState("networkidle");
 
@@ -31,23 +32,23 @@ for (const name of PAGES) {
 }
 
 test("data-driven sections render", async ({ page }) => {
-  await page.goto("/portfolio.html");
+  await page.goto("/portfolio");
   expect(await page.locator("[data-projects] .project-card").count()).toBeGreaterThan(1);
-  await page.goto("/pricing.html");
+  await page.goto("/pricing");
   await expect(page.locator("[data-pricing] .price-card")).toHaveCount(3);
   await expect(page.locator("[data-plans] .price-card")).toHaveCount(3);
-  await page.goto("/index.html");
+  await page.goto("/");
   expect(await page.locator("[data-projects='featured'] .project-card").count()).toBeGreaterThan(0);
 });
 
 test("pricing buttons open WhatsApp with the plan name", async ({ page }) => {
-  await page.goto("/pricing.html");
+  await page.goto("/pricing");
   const href = await page.locator("[data-plans] .price-card a").first().getAttribute("href");
   expect(decodeURIComponent(href)).toContain("Basic Maintenance");
 });
 
 test("contact form validates input and keeps spam protection", async ({ page }) => {
-  await page.goto("/contact.html");
+  await page.goto("/contact");
   const form = page.locator("form[name=contact]");
   await expect(form).toHaveAttribute("data-netlify", "true");
   await expect(form.locator("input[name=bot-field]")).toBeAttached();
@@ -69,7 +70,7 @@ REVIEWS.push({ name: "<img src=x onerror=window.__xss=1>", business: "<b>biz</b>
   website: "javascript:window.__xss=1", featured: true });`;
     await route.fulfill({ response: res, body });
   });
-  await page.goto("/reviews.html");
+  await page.goto("/reviews");
   await page.waitForLoadState("networkidle");
   await expect(page.locator(".review-card")).toHaveCount(1);
   await expect(page.locator(".review-card blockquote")).toContainText("<script>");   // shown as text
@@ -79,7 +80,7 @@ REVIEWS.push({ name: "<img src=x onerror=window.__xss=1>", business: "<b>biz</b>
 
 test("mobile menu opens and closes", async ({ page, isMobile }) => {
   test.skip(!isMobile, "mobile only");
-  await page.goto("/index.html");
+  await page.goto("/");
   await page.click(".nav-toggle");
   await expect(page.locator("body")).toHaveClass(/nav-open/);
   await page.keyboard.press("Escape");
