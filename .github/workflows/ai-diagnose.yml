@@ -1,0 +1,116 @@
+# AI maintenance agent. Diagnoses an incident and, if it finds a small,
+# safe, tested content fix, opens a DRAFT pull request for you to review.
+# It never merges, never deploys and never touches netlify.toml, tests,
+# workflows or dependencies (see scripts/agent/guard.mjs).
+#
+# Started by: the monitor / CI workflows (workflow_dispatch with an issue
+# number), or by YOU adding the "ai-diagnose" label to an issue.
+name: AI incident diagnosis
+
+on:
+  workflow_dispatch:
+    inputs:
+      issue:
+        description: "Incident issue number"
+        required: true
+  issues:
+    types: [labeled]
+
+permissions:
+  contents: write       # push the ai-fix/* branch (never main)
+  pull-requests: write  # open a draft pull request
+  issues: write         # post the incident report
+  actions: write        # start CI on the new branch
+
+concurrency:
+  group: ai-diagnose
+  cancel-in-progress: false
+
+env:
+  MAX_RUNS_PER_DAY: 5   # cost cap: at most 5 AI diagnoses per day
+
+jobs:
+  diagnose:
+    # Only the repository owner (or this repo's own workflows) can start it.
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.label.name == 'ai-diagnose' && github.event.sender.login == github.repository_owner)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GH_REPO: ${{ github.repository }}
+      ISSUE: ${{ github.event.inputs.issue || github.event.issue.number }}
+    steps:
+      - name: Daily cost cap
+        id: cap
+        run: |
+          [[ "$ISSUE" =~ ^[0-9]+$ ]] || { echo "Issue number must be numeric"; exit 1; }
+          N=$(gh run list --workflow ai-diagnose.yml --created ">=$(date -u +%F)" --json databaseId --jq length)
+          echo "runs today: $N"
+          if [ "$N" -gt "$MAX_RUNS_PER_DAY" ]; then
+            gh issue comment "$ISSUE" --body "⏸️ AI diagnosis skipped: the daily limit of $MAX_RUNS_PER_DAY runs was reached. Add the \`ai-diagnose\` label again tomorrow, or investigate manually."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/checkout@v4
+        if: steps.cap.outputs.skip != 'true'
+        with:
+          ref: main
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        if: steps.cap.outputs.skip != 'true'
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install check tools
+        if: steps.cap.outputs.skip != 'true'
+        run: npm ci && npx playwright install --with-deps chromium
+
+      # Fresh, redacted evidence from approved sources only
+      - name: Collect evidence
+        if: steps.cap.outputs.skip != 'true'
+        env:
+          SITE_URL: ${{ vars.SITE_URL }}
+        run: |
+          mkdir -p reports
+          if [ -n "$SITE_URL" ]; then node scripts/monitor.mjs || true; fi
+          npm run -s check:config || true
+          npm run -s check:links || true
+          npx html-validate -f json "*.html" > reports/html-validate.json || true
+          npm audit --json > reports/npm-audit.json || true
+          npm run -s test:e2e > reports/build-log.txt 2>&1 || true
+
+      - name: AI diagnosis (Claude)
+        if: steps.cap.outputs.skip != 'true'
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          TITLE=$(gh issue view "$ISSUE" --json title --jq .title)
+          node scripts/agent/diagnose.mjs --incident "$TITLE"
+
+      - name: Post the incident report on the issue
+        if: steps.cap.outputs.skip != 'true' && always()
+        run: |
+          if [ -f reports/incident-report.md ]; then
+            gh issue comment "$ISSUE" --body-file reports/incident-report.md
+          else
+            gh issue comment "$ISSUE" --body "⚠️ The AI agent could not produce a diagnosis (see the workflow log). Please investigate manually: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          fi
+          gh issue edit "$ISSUE" --remove-label ai-diagnose 2>/dev/null || true
+
+      - name: Open a draft pull request with the tested fix
+        if: steps.cap.outputs.skip != 'true'
+        run: |
+          STATUS=$(node -e 'console.log(require("./reports/agent-result.json").patch_status)')
+          if [ "$STATUS" != "applied-and-tested" ]; then echo "No tested fix to propose ($STATUS)."; exit 0; fi
+          BR="ai-fix/issue-$ISSUE-${{ github.run_id }}"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$BR"
+          git add -u -- '*.html' css js sitemap.xml robots.txt
+          git commit -m "AI-proposed fix for #$ISSUE (needs human review)"
+          git push "https://x-access-token:${GH_TOKEN}@github.com/${GH_REPO}.git" "HEAD:refs/heads/$BR"
+          { echo "> **Draft, AI-generated.** Review the diff and the Netlify preview before merging. Related to #$ISSUE."; echo; cat reports/incident-report.md; } > pr-body.md
+          gh pr create --draft --base main --head "$BR" --title "AI fix for #$ISSUE: $(node -e 'console.log(require("./reports/agent-result.json").title)')" --body-file pr-body.md
+          gh workflow run ci.yml --ref "$BR"

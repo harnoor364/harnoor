@@ -70,6 +70,19 @@ to leave Google reviews.
 
 After the site is live, add it to **Google Search Console** and submit `sitemap.xml`.
 
+## Monitoring, tests and the AI maintenance agent
+
+Everything is documented in [`docs/maintenance/`](docs/maintenance/):
+assessment, plan, incident format, the safe AI workflow, **setup steps and costs**, and limitations.
+
+```bash
+npm ci && npx playwright install chromium   # one-time
+npm test                                    # all checks: config, links, HTML, unit + browser tests
+SITE_URL=https://your-site.netlify.app npm run monitor   # check the live site
+```
+
+None of these files are served to visitors (blocked in `netlify.toml`).
+
 ## Security & fixing problems
 
 **Already built in**

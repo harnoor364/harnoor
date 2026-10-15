@@ -1,0 +1,13 @@
+# Weekly pull requests for vulnerable or outdated check tools and GitHub Actions.
+# They go through the same CI checks and your review like any other change.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: "/"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
