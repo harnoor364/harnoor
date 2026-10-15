@@ -1,5 +1,6 @@
 User-agent: *
 Allow: /
 Disallow: /thank-you.html
+Disallow: /thank-you
 
-Sitemap: https://harnoorsingh.netlify.app/sitemap.xml
+Sitemap: https://harnoorsingh.in/sitemap.xml
