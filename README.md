@@ -70,6 +70,26 @@ to leave Google reviews.
 
 After the site is live, add it to **Google Search Console** and submit `sitemap.xml`.
 
+## Security & fixing problems
+
+**Already built in**
+- Plain HTML/CSS/JS: no login, database or server code to attack.
+- Security headers in `netlify.toml` (and `vercel.json`, if you ever move to Vercel): HTTPS only,
+  no framing by other sites, and only this site's own scripts can run.
+- Forms: spam honeypot, and all text from reviews is escaped before it is shown.
+
+**Your checklist**
+1. Turn on **two-factor authentication** for GitHub, Netlify, your domain registrar and the Google account used for Search Console.
+2. At your domain registrar: turn on **auto-renew** and **domain lock** (transfer lock).
+3. Never paste API keys or passwords into this repository; it is public.
+4. Netlify → Forms: turn on **spam filtering** and email notifications.
+5. Free uptime monitoring (e.g. UptimeRobot) emails you if the site goes down.
+
+**If an update breaks something**
+- Netlify → **Deploys** → open the last working deploy → **Publish deploy**. The site rolls back instantly.
+- Every change is saved in GitHub history, so any change can be undone.
+- Check Google Search Console → **Pages** now and then for errors.
+
 ## Deploying on Netlify
 
 1. In Netlify: **Add new site → Import an existing project →** choose this GitHub repo.
