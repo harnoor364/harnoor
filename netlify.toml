@@ -36,6 +36,12 @@
   to = "https://harnoorsingh.in/:splat"
   status = 301
   force = true
+# The site's actual Netlify address (from the Netlify deploy checks) also redirects.
+[[redirects]]
+  from = "https://cerulean-muffin-934237.netlify.app/*"
+  to = "https://harnoorsingh.in/:splat"
+  status = 301
+  force = true
 
 # ---------------------------------------------------------------------------
 # Clean URLs: /page.html -> /page (301), and /page serves page.html (200).
