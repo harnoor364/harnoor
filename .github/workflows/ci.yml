@@ -1,0 +1,92 @@
+# Checks every proposed change (pull requests) and every merge to main.
+# Read-only: it never deploys. Netlify builds its own preview for each PR.
+name: CI checks
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch: # lets the AI workflow re-run checks on its own pull requests
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # full history for the secret scan
+          persist-credentials: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install check tools
+        run: npm ci && npx playwright install --with-deps chromium
+
+      - name: Secret scan (gitleaks)
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Dependency vulnerabilities (npm audit)
+        run: |
+          mkdir -p reports
+          npm audit --json > reports/npm-audit.json || true
+          npm audit --audit-level=high
+
+      - name: JavaScript syntax
+        run: npm run check:js
+      - name: Security settings, forms, secrets, header/footer consistency
+        run: npm run check:config
+      - name: Broken links and images
+        run: npm run check:links
+      - name: HTML validation
+        run: |
+          npx html-validate -f json "*.html" > reports/html-validate.json || true
+          npm run lint:html
+      - name: Unit tests (redaction + AI safety guard)
+        run: npm run test:unit
+      - name: Browser tests (desktop + mobile, with live security headers)
+        run: npm run test:e2e
+
+      - name: Save reports for diagnosis
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ci-reports
+          path: reports/
+          retention-days: 14
+
+  # A failure on main (after merge) opens an incident for the AI agent.
+  report-failure:
+    needs: checks
+    if: failure() && github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      actions: write # start the AI diagnosis workflow
+    steps:
+      - name: Open incident issue
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          SHA: ${{ github.sha }}
+        run: |
+          gh label create incident --color B60205 --description "Automated incident" 2>/dev/null || true
+          gh label create ai-diagnose --color 5319E7 --description "Ask the AI agent to diagnose" 2>/dev/null || true
+          URL=$(gh issue create \
+            --title "🚨 CI checks failing on main (${SHA::7})" \
+            --label incident \
+            --body "Automated checks failed after a change reached \`main\`. Run: $RUN_URL. The AI agent will add a diagnosis below. **Check the live site and roll back in Netlify if needed.**")
+          gh workflow run ai-diagnose.yml -f issue="${URL##*/}" || echo "AI diagnosis not started"
