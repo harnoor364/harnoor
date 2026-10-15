@@ -58,7 +58,7 @@ jobs:
         with:
           ref: main
           persist-credentials: false
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         if: steps.cap.outputs.skip != 'true'
         with:
           node-version: 22
