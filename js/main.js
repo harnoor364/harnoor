@@ -106,7 +106,7 @@
 
   // Final card that invites a new client
   const nextProjectCard = () => `
-      <a class="card project-card project-next reveal" href="contact.html">
+      <a class="card project-card project-next reveal" href="/contact">
         <span class="next-icon">${ICON.plus}</span>
         <h3>Your business could be next</h3>
         <p>Tell me about your clinic, shop or restaurant and I'll show you what your website could look like.</p>
@@ -137,7 +137,7 @@
   function reviewCard(r) {
     const initials = esc(String(r.name || "?").trim().split(/\s+/).map((w) => w[0]).slice(0, 2).join("").toUpperCase());
     const photo = r.photo
-      ? `<img src="${esc(r.photo)}" alt="" loading="lazy" width="48" height="48">`
+      ? `<img src="${esc(r.photo)}" alt="Photo of ${esc(r.name)}" loading="lazy" width="48" height="48">`
       : `<span aria-hidden="true">${initials}</span>`;
     const site = safeUrl(r.website);
     return `
@@ -160,7 +160,7 @@
         <span class="empty-stars">${stars(5)}</span>
         <h3>Reviews are on their way</h3>
         <p>Already worked with me? I'd love to hear how your new website is doing.</p>
-        <a class="btn btn-outline btn-sm" href="reviews.html#leave-review">Leave a review</a>
+        <a class="btn btn-outline btn-sm" href="/reviews#leave-review">Leave a review</a>
       </div>`;
 
   function renderReviews() {
