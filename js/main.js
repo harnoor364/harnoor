@@ -90,8 +90,8 @@
     return `
       <article class="card project-card reveal">
         <div class="project-thumb">
-          <img src="${esc(p.image)}" alt="Desktop view of the ${esc(p.title)} website" loading="lazy" width="1200" height="750">
-          ${p.mobileImage ? `<span class="thumb-phone"><img src="${esc(p.mobileImage)}" alt="Mobile view of the ${esc(p.title)} website" loading="lazy" width="390" height="844"></span>` : ""}
+          <img src="${esc(p.image)}" alt="${esc(p.category)} website${p.location ? ` in ${esc(p.location)}` : ""} – desktop view (${esc(p.title)})" loading="lazy" width="1200" height="750">
+          ${p.mobileImage ? `<span class="thumb-phone"><img src="${esc(p.mobileImage)}" alt="${esc(p.category)} website${p.location ? ` in ${esc(p.location)}` : ""} – mobile view (${esc(p.title)})" loading="lazy" width="390" height="844"></span>` : ""}
           ${p.note ? `<span class="project-note">${esc(p.note)}</span>` : ""}
         </div>
         <div class="project-body">
