@@ -124,6 +124,10 @@
       } else if (mode === "doctors") {
         // Doctors page: projects whose category mentions a clinic or medical practice
         list = PROJECTS.filter((p) => /clinic|medical|doctor|dental|hospital/i.test(p.category));
+      } else if (mode === "filter") {
+        // Industry pages: data-filter="restaurant|cafe" matches the project's category
+        const re = new RegExp(el.getAttribute("data-filter") || "^$", "i");
+        list = PROJECTS.filter((p) => re.test(p.category));
       }
       el.innerHTML = list.map(projectCard).join("") + (featuredOnly ? "" : nextProjectCard());
     });
