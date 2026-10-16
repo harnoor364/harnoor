@@ -1,5 +1,5 @@
 /* =====================================================================
-   STYLES — Harnoor Singh Web Design
+   STYLES — Upward Web by Harnoor Singh
    Change the colours and fonts for the whole site in :root below.
    ===================================================================== */
 
@@ -116,14 +116,19 @@ p { margin: 0 0 1em; }
 .site-header.scrolled { border-color: var(--line); box-shadow: 0 4px 20px -12px rgba(59, 42, 30, 0.2); }
 .nav-wrap { display: flex; align-items: center; justify-content: space-between; height: var(--header-h); gap: 16px; }
 
-.logo { display: flex; align-items: center; gap: 10px; color: var(--ink); font-weight: 800; letter-spacing: -0.02em; }
-.logo:hover { color: var(--ink); }
-.logo-mark {
-  display: grid; place-items: center; width: 38px; height: 38px; border-radius: 11px;
-  background: linear-gradient(135deg, var(--accent), #c9a37a); color: #fff; font-size: 0.95rem;
+/* Logo: Upward Web lockup (icon + wordmark + tagline). Plus Jakarta Sans is used for the logo only. */
+.logo { display: inline-flex; align-items: center; gap: 10px; flex: none; white-space: nowrap; font-family: "Plus Jakarta Sans", var(--font); }
+.logo-icon { width: 40px; height: 40px; flex: none; display: block; }
+.logo-text { display: flex; flex-direction: column; font-size: 24px; }
+.logo-name { font-weight: 800; letter-spacing: -0.03em; line-height: 1; color: #1E1A17; }
+.logo-accent { color: #8B5E3C; }
+.logo-tagline { font-size: 0.4em; font-weight: 500; line-height: 1; margin-top: 3px; color: #6B5B4E; letter-spacing: 0; }
+@media (max-width: 599px) {
+  .logo { gap: 8px; }
+  .logo-icon { width: 32px; height: 32px; }
+  .logo-text { font-size: 20px; }
+  .logo-tagline { font-size: 10px; margin-top: 2px; }
 }
-.logo-text { display: flex; flex-direction: column; line-height: 1.1; font-size: 1.05rem; }
-.logo-text small { font-size: 0.72rem; font-weight: 600; color: var(--muted); letter-spacing: 0.04em; text-transform: uppercase; }
 
 .main-nav ul { list-style: none; margin: 0; padding: 0; display: flex; gap: 4px; }
 .main-nav a:not(.btn) {
@@ -132,6 +137,8 @@ p { margin: 0 0 1em; }
 }
 .main-nav a:not(.btn):hover { color: var(--accent); background: var(--accent-soft); }
 .main-nav a[aria-current="page"] { color: var(--accent); font-weight: 600; }
+.nav-cta { white-space: nowrap; }
+@media (min-width: 900px) and (max-width: 1099px) { .main-nav a:not(.btn) { padding: 8px 9px; } }
 
 .nav-toggle {
   display: none; width: 46px; height: 46px; border: 1px solid var(--line); background: var(--card); border-radius: 12px;
@@ -467,8 +474,11 @@ fieldset.field { border: 0; margin: 0; padding: 0; min-width: 0; }
 .site-footer ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
 .site-footer a { color: #d8c7ae; transition: color 0.2s; }
 .site-footer a:hover { color: #fff; }
-.footer-brand .logo, .footer-brand .logo:hover { color: #fff; }
-.footer-brand .logo-text small { color: #bca88f; }
+.footer-brand .logo-icon-bg { fill: #D9B48F; }
+.footer-brand .logo-icon-fg { stroke: #1E1A17; }
+.footer-brand .logo-name { color: #fff; }
+.footer-brand .logo-accent { color: #D9B48F; }
+.footer-brand .logo-tagline { color: #BFB2A6; }
 .footer-brand p { margin: 16px 0 0; max-width: 320px; color: #bca88f; }
 .footer-contact li { display: flex; gap: 10px; align-items: flex-start; }
 .footer-contact svg { width: 18px; height: 18px; flex: none; margin-top: 3px; color: #c9a37a; }
