@@ -191,6 +191,15 @@
   to = "/services.html"
   status = 200
 [[redirects]]
+  from = "/hosiery.html"
+  to = "/hosiery"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/hosiery"
+  to = "/hosiery.html"
+  status = 200
+[[redirects]]
   from = "/thank-you.html"
   to = "/thank-you"
   status = 301

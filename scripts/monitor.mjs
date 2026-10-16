@@ -26,7 +26,7 @@ if (!LOCAL_TEST && !/^https:\/\/[a-z0-9.-]+$/i.test(SITE_URL)) {
 }
 const SLOW_MS = Number(process.env.SLOW_MS || 4000);
 const TIMEOUT_MS = 15000;
-const PAGES = ["/", "/portfolio", "/pricing", "/seo", "/reviews", "/contact", "/doctors", "/restaurants", "/shops", "/services"];
+const PAGES = ["/", "/portfolio", "/pricing", "/seo", "/reviews", "/contact", "/doctors", "/restaurants", "/shops", "/services", "/hosiery"];
 const MUST_MATCH_REPO = ["js/main.js", "js/data.js", "css/style.css"];
 const MUST_BE_BLOCKED = ["/README.md", "/package.json", "/scripts/monitor.mjs", "/netlify.toml"];
 const REQUIRED_HEADERS = { "content-security-policy": "frame-ancestors 'none'", "x-frame-options": "DENY", "x-content-type-options": "nosniff", "strict-transport-security": "max-age=" };
