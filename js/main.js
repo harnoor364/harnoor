@@ -27,10 +27,7 @@
   /* ---------- Inline icons (no icon library = faster site) ---------- */
   const ICON = {
     star: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>',
-    check: '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>',
-    external: '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>',
-    arrow: '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>',
-    plus: '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg>'
+    external: '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>'
   };
 
   const stars = (rating) => {
@@ -80,38 +77,29 @@
     onScroll();
   }
 
-  /* ---------- Portfolio cards ---------- */
+  /* ---------- Portfolio ---------- */
   function projectCard(p) {
     const url = safeUrl(p.url);
-    const tags = (p.tags || []).map((t) => `<li>${esc(t)}</li>`).join("");
-    const button = url
-      ? `<a class="btn btn-primary btn-sm" href="${esc(url)}" target="_blank" rel="noopener">Visit Live Site ${ICON.external}</a>`
-      : `<span class="btn btn-muted btn-sm" aria-disabled="true">Live link coming soon</span>`;
+    const where = `${esc(p.category)} website${p.location ? ` in ${esc(p.location)}` : ""}`;
+    const features = (p.tags || []).map(esc).join(", ");
+    const link = url
+      ? `<a class="text-link" href="${esc(url)}" target="_blank" rel="noopener">Open the live site</a>`
+      : `<span class="muted small">Live link coming soon</span>`;
     return `
-      <article class="card project-card reveal">
-        <div class="project-thumb">
-          <img src="${esc(p.image)}" alt="${esc(p.category)} website${p.location ? ` in ${esc(p.location)}` : ""} – desktop view (${esc(p.title)})" loading="lazy" width="1200" height="750">
-          ${p.mobileImage ? `<span class="thumb-phone"><img src="${esc(p.mobileImage)}" alt="${esc(p.category)} website${p.location ? ` in ${esc(p.location)}` : ""} – mobile view (${esc(p.title)})" loading="lazy" width="390" height="844"></span>` : ""}
-          ${p.note ? `<span class="project-note">${esc(p.note)}</span>` : ""}
+      <article class="project-card">
+        <div class="project-shot">
+          <img class="shot-desktop" src="${esc(p.image)}" alt="${where} – desktop view (${esc(p.title)})" loading="lazy" width="1200" height="750">
+          ${p.mobileImage ? `<span class="shot-phone"><img src="${esc(p.mobileImage)}" alt="${where} – mobile view (${esc(p.title)})" loading="lazy" width="390" height="844"></span>` : ""}
         </div>
         <div class="project-body">
-          <p class="project-cat">${esc(p.category)}${p.location ? ` · <span>${esc(p.location)}</span>` : ""}</p>
+          <p class="project-cat">${esc(p.category)}${p.location ? ` · ${esc(p.location)}` : ""}${p.note ? `<span class="project-note">${esc(p.note)}</span>` : ""}</p>
           <h3>${esc(p.title)}</h3>
           <p class="project-desc">${esc(p.description)}</p>
-          <ul class="tags" aria-label="Features built">${tags}</ul>
-          <div class="project-actions">${button}</div>
+          ${features ? `<p class="project-features"><strong>Built in:</strong> ${features}</p>` : ""}
+          <div class="project-actions">${link}</div>
         </div>
       </article>`;
   }
-
-  // Final card that invites a new client
-  const nextProjectCard = () => `
-      <a class="card project-card project-next reveal" href="/contact">
-        <span class="next-icon">${ICON.plus}</span>
-        <h3>Your business could be next</h3>
-        <p>Tell me about your clinic, shop or restaurant and I'll show you what your website could look like.</p>
-        <span class="link-arrow">Start your project ${ICON.arrow}</span>
-      </a>`;
 
   function renderProjects() {
     $$("[data-projects]").forEach((el) => {
@@ -129,7 +117,7 @@
         const re = new RegExp(el.getAttribute("data-filter") || "^$", "i");
         list = PROJECTS.filter((p) => re.test(p.category));
       }
-      el.innerHTML = list.map(projectCard).join("") + (featuredOnly ? "" : nextProjectCard());
+      el.innerHTML = list.map(projectCard).join("");
     });
   }
 
@@ -141,7 +129,7 @@
       : `<span aria-hidden="true">${initials}</span>`;
     const site = safeUrl(r.website);
     return `
-      <article class="card review-card reveal">
+      <article class="review-card">
         ${stars(r.rating)}
         <blockquote>“${esc(r.text)}”</blockquote>
         <footer class="review-author">
@@ -155,27 +143,25 @@
       </article>`;
   }
 
-  const emptyReviews = () => `
-      <div class="card empty-card reveal">
-        <span class="empty-stars">${stars(5)}</span>
-        <h3>Reviews are on their way</h3>
-        <p>Already worked with me? I'd love to hear how your new website is doing.</p>
-        <a class="btn btn-outline btn-sm" href="/reviews#leave-review">Leave a review</a>
-      </div>`;
+  // No reviews yet: the homepage shows a marked placeholder (replace with a real review),
+  // the Reviews page says so plainly. Reviews are never made up.
+  const emptyReviews = (featured) => featured
+    ? `<div class="quote-placeholder"><p><span class="placeholder-text">[REAL CLIENT REVIEW]</span></p><p class="muted small">Add a real review to REVIEWS in js/data.js and it replaces this box.</p></div>`
+    : `<div class="empty-card"><h2>No reviews published yet.</h2><p>I'd rather show none than make any up. If we've worked together, I'd be grateful for a few honest lines below.</p><a class="btn btn-outline btn-sm" href="#leave-review">Leave a review</a></div>`;
 
   function renderReviews() {
     $$("[data-reviews]").forEach((el) => {
       const featuredOnly = el.getAttribute("data-reviews") === "featured";
       let list = featuredOnly ? reviews.filter((r) => r.featured).slice(0, 2) : reviews;
       if (featuredOnly && !list.length) list = reviews.slice(0, 2);
-      el.innerHTML = list.length ? list.map(reviewCard).join("") : emptyReviews();
+      el.innerHTML = list.length ? list.map(reviewCard).join("") : emptyReviews(featuredOnly);
       el.classList.toggle("is-empty", !list.length);
     });
 
     // Average rating summary (Reviews page)
     $$("[data-rating-summary]").forEach((el) => {
       if (!reviews.length) {
-        el.innerHTML = `<p class="summary-empty">No reviews yet — be the first to share your experience.</p>`;
+        el.innerHTML = "";
         return;
       }
       const avg = reviews.reduce((sum, r) => sum + (Number(r.rating) || 0), 0) / reviews.length;
@@ -199,15 +185,16 @@
   /* ---------- Pricing cards (website packages + monthly plans) ---------- */
   // One card; `badge` (e.g. "Most Popular") highlights it.
   const priceCard = (p, badge, msg) => `
-        <article class="card price-card reveal${badge ? " popular" : ""}">
-          ${badge ? `<span class="badge-popular">${esc(badge)}</span>` : ""}
-          <h3>${esc(p.name)}</h3>
-          <p class="price-tagline">${esc(p.tagline)}</p>
-          <p class="price"><span>${esc(p.price)}</span><small>${esc(p.priceNote)}</small></p>
+        <article class="price-card${badge ? " popular" : ""}">
+          <div>
+            <h3>${esc(p.name)}${badge ? `<span class="badge-popular">${esc(badge === "Most Popular" ? "most clients pick this" : badge.toLowerCase())}</span>` : ""}</h3>
+            <p class="price-tagline">${esc(p.tagline)}</p>
+          </div>
+          <p class="price">${esc(p.price)}<small>${esc(p.priceNote)}</small></p>
           <ul class="price-features">
-            ${p.features.map((f) => `<li>${ICON.check}<span>${esc(f)}</span></li>`).join("")}
+            ${p.features.map((f) => `<li>${esc(f)}</li>`).join("")}
           </ul>
-          <a class="btn ${badge ? "btn-primary" : "btn-outline"} btn-block" href="${waLink(msg)}" target="_blank" rel="noopener">Get Started</a>
+          <a class="btn ${badge ? "btn-primary" : "btn-outline"} btn-sm" href="${waLink(msg)}" target="_blank" rel="noopener">Ask about ${esc(p.name)}</a>
         </article>`;
 
   function renderPricing() {
@@ -222,32 +209,6 @@
       // data-plans="seo" (SEO page) shows only the plans that include SEO
       const list = el.getAttribute("data-plans") === "seo" ? MONTHLY_PLANS.filter((p) => /seo|complete/i.test(p.name)) : MONTHLY_PLANS;
       el.innerHTML = list.map((p) => priceCard(p, p.badge, `Hi Harnoor, I'm interested in the ${p.name} plan.`)).join("");
-    });
-  }
-
-  /* ---------- Scroll reveal animations ---------- */
-  function initReveal() {
-    const items = $$(".reveal");
-    if (!("IntersectionObserver" in window) || matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      items.forEach((el) => el.classList.add("visible"));
-      return;
-    }
-    const io = new IntersectionObserver(
-      (entries) =>
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("visible");
-            io.unobserve(entry.target);
-          }
-        }),
-      { threshold: 0.12, rootMargin: "0px 0px -40px 0px" }
-    );
-    // Stagger cards that sit side by side
-    items.forEach((el) => {
-      const siblings = el.parentElement ? $$(":scope > .reveal", el.parentElement) : [];
-      const i = siblings.indexOf(el);
-      if (i > 0) el.style.transitionDelay = `${Math.min(i, 4) * 80}ms`;
-      io.observe(el);
     });
   }
 
@@ -347,6 +308,5 @@
     initStarInput();
     preselectPackage();
     initForms();
-    initReveal(); // last, so it also animates the cards created above
   });
 })();

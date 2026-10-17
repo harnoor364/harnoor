@@ -1,13 +1,15 @@
-# Netlify settings — plain static site, no build step needed.
+# Netlify settings. The only build step writes js/supabase-config.js from the
+# SUPABASE_URL / SUPABASE_ANON_KEY environment variables (see docs/CLIENT-PORTAL-SETUP.md).
 [build]
   publish = "."
+  command = "node scripts/build-config.mjs"
 
 # Security headers: block other sites from framing this site, stop
 # unexpected scripts from running, and force HTTPS.
 [[headers]]
   for = "/*"
   [headers.values]
-    Content-Security-Policy = "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'; upgrade-insecure-requests"
+    Content-Security-Policy = "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://*.supabase.co; form-action 'self'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'; upgrade-insecure-requests"
     Strict-Transport-Security = "max-age=63072000; includeSubDomains"
     X-Frame-Options = "DENY"
     X-Content-Type-Options = "nosniff"
@@ -200,6 +202,87 @@
   to = "/hosiery.html"
   status = 200
 [[redirects]]
+  from = "/signup.html"
+  to = "/signup"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/signup"
+  to = "/signup.html"
+  status = 200
+[[redirects]]
+  from = "/login.html"
+  to = "/login"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/login"
+  to = "/login.html"
+  status = 200
+[[redirects]]
+  from = "/forgot-password.html"
+  to = "/forgot-password"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/forgot-password"
+  to = "/forgot-password.html"
+  status = 200
+[[redirects]]
+  from = "/reset-password.html"
+  to = "/reset-password"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/reset-password"
+  to = "/reset-password.html"
+  status = 200
+[[redirects]]
+  from = "/account.html"
+  to = "/account"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/account"
+  to = "/account.html"
+  status = 200
+[[redirects]]
+  from = "/privacy-policy.html"
+  to = "/privacy-policy"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/privacy-policy"
+  to = "/privacy-policy.html"
+  status = 200
+[[redirects]]
+  from = "/terms.html"
+  to = "/terms"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/terms"
+  to = "/terms.html"
+  status = 200
+[[redirects]]
+  from = "/cookie-policy.html"
+  to = "/cookie-policy"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/cookie-policy"
+  to = "/cookie-policy.html"
+  status = 200
+[[redirects]]
+  from = "/refund-policy.html"
+  to = "/refund-policy"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/refund-policy"
+  to = "/refund-policy.html"
+  status = 200
+[[redirects]]
   from = "/thank-you.html"
   to = "/thank-you"
   status = 301
@@ -208,3 +291,16 @@
   from = "/thank-you"
   to = "/thank-you.html"
   status = 200
+
+# Login and account pages: never cache, never show in search results.
+[[headers]]
+  for = "/account*"
+  [headers.values]
+    Cache-Control = "no-store"
+    X-Robots-Tag = "noindex"
+[[headers]]
+  for = "/reset-password*"
+  [headers.values]
+    Cache-Control = "no-store"
+    X-Robots-Tag = "noindex"
+    Referrer-Policy = "no-referrer"

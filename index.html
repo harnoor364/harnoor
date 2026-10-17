@@ -33,12 +33,13 @@
   <!-- Font: Inter (Google Fonts) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&amp;family=Literata:ital,opsz,wght@0,7..72,500;1,7..72,500&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="css/style.css">
-  <noscript><style>.reveal { opacity: 1; transform: none; }</style></noscript>
   <script src="js/data.js" defer></script>
   <script src="js/main.js" defer></script>
+  <script src="js/auth-state.js" defer></script>
+  <script src="js/consent.js" defer></script>
   <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -119,12 +120,11 @@
 <body data-page="home">
   <a class="skip-link" href="#main">Skip to content</a>
 
-  <!-- ================= HEADER / NAVBAR ================= -->
   <header class="site-header">
     <div class="container nav-wrap">
       <a href="/" class="logo" aria-label="Upward Web by Harnoor Singh — home">
         <svg class="logo-icon" viewBox="0 0 72 72" aria-hidden="true" focusable="false"><rect class="logo-icon-bg" width="72" height="72" rx="16" fill="#8B5E3C"/><path class="logo-icon-fg" d="M22 28 V42 A12 12 0 0 0 46 42 V18" stroke="#FFFFFF" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path class="logo-icon-fg" d="M38 25 L46 17 L54 25" stroke="#FFFFFF" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
-        <span class="logo-text"><span class="logo-name">Upward <span class="logo-accent">Web</span></span><span class="logo-tagline">by Harnoor Singh</span></span>
+        <span class="logo-text"><span class="logo-name">Upward <span class="logo-accent">Web</span></span> <span class="logo-tagline">by Harnoor Singh</span></span>
       </a>
       <nav class="main-nav" id="main-nav" aria-label="Main">
         <ul>
@@ -134,6 +134,7 @@
           <li><a href="/seo" data-nav="seo">SEO</a></li>
           <li><a href="/reviews" data-nav="reviews">Reviews</a></li>
           <li><a href="/contact" data-nav="contact">Contact</a></li>
+          <li><a href="/login" data-nav="account" data-account-link>Log in</a></li>
         </ul>
         <a href="/contact" class="btn btn-primary btn-sm nav-cta">Get a Website</a>
       </nav>
@@ -145,145 +146,94 @@
 
   <main id="main">
 
-    <!-- ================= HERO ================= -->
     <section class="hero">
-      <div class="container hero-grid">
-        <div class="hero-content">
-          <span class="eyebrow eyebrow-pill"><span class="dot"></span> Web designer in Ludhiana, Punjab</span>
-          <h1>Freelance Website Designer in Ludhiana – Websites That Bring <span class="text-accent">More Customers</span></h1>
-          <p class="lead">As a freelance website designer in Ludhiana, I design and build fast, mobile-friendly websites for doctors, clinics, local shops, restaurants and service businesses — so customers can find you on Google and reach you on WhatsApp in one tap.</p>
+      <div class="container split split-center">
+        <div>
+          <p class="kicker"><strong>Harnoor Singh</strong> · website designer · Ludhiana, Punjab</p>
+          <h1>Freelance Website Designer in Ludhiana – <span class="h1-sub">Websites That Bring More Customers</span></h1>
+          <p class="lead">As a freelance website designer in Ludhiana, I design and build fast, mobile-friendly websites for doctors, clinics, local shops, restaurants and service businesses, so customers can find you on Google and reach you on WhatsApp in one tap.</p>
+          <p>You talk to me, not a sales team. I design the site, build it, put it online and answer your messages afterwards. Packages start at ₹8,000.</p>
           <div class="btn-row">
-            <a href="/portfolio" class="btn btn-primary btn-lg">View My Work <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>
-            <a href="/contact" class="btn btn-outline btn-lg">Get a Website</a>
+            <a class="btn btn-whatsapp btn-lg" href="https://wa.me/917973353244" data-wa="Hi Harnoor! I saw your website and I&#x27;d like to know more about getting a website for my business." target="_blank" rel="noopener">Message me on WhatsApp</a>
+            <a class="btn btn-outline btn-lg" href="/portfolio">See my work</a>
           </div>
-          <ul class="hero-points">
-            <li><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Mobile-first design</li>
-            <li><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> WhatsApp &amp; Google Maps ready</li>
-            <li><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Clear, fixed packages</li>
-          </ul>
         </div>
-
-        <!-- Decorative website mock-up (pure HTML/CSS, no images) -->
-        <div class="hero-visual" aria-hidden="true">
-          <div class="mock-browser">
-            <div class="mock-bar"><span></span><span></span><span></span><div class="mock-url">yourbusiness.in</div></div>
-            <div class="mock-body">
-              <div class="mock-nav"><i class="mock-logo"></i><i></i><i></i><i></i></div>
-              <div class="mock-hero-block"><i class="w-70"></i><i class="w-50"></i><i></i><b class="mock-btn"></b></div>
-              <div class="mock-cards"><i></i><i></i><i></i></div>
-            </div>
-          </div>
-          <div class="mock-chip chip-1"><span class="chip-ico">💬</span> New WhatsApp enquiry</div>
-          <div class="mock-chip chip-2"><span class="chip-ico">📍</span> Found on Google Maps</div>
-          <div class="mock-chip chip-3"><span class="chip-ico">📅</span> Appointment requested</div>
+        <div>
+          <figure class="photo-slot"><div><strong>[PHOTO OF ME]</strong><span>A natural photo of Harnoor, e.g. at a desk or in a client's shop. Portrait, about 1000×1250px.</span></div></figure>
+          <p class="hand photo-caption">That's me. I'll be the one answering your WhatsApp.</p>
         </div>
       </div>
     </section>
 
-    <!-- Who I work with -->
-    <section class="audience" aria-label="Businesses I work with">
-      <div class="container audience-inner">
-        <span class="audience-label">Built for</span>
-        <a class="audience-pill" href="/doctors">🩺 Doctors &amp; Clinics</a>
-        <a class="audience-pill" href="/restaurants">🍽️ Restaurants &amp; Cafés</a>
-        <a class="audience-pill" href="/shops">🛍️ Local Shops</a>
-        <a class="audience-pill" href="/services">🛠️ Service Businesses</a>
-      </div>
-    </section>
-
-    <!-- ================= WHAT I DO ================= -->
-    <section class="section" id="services">
-      <div class="container">
-        <div class="section-head reveal">
-          <span class="eyebrow">What I do</span>
+    <section class="band band-alt" id="services">
+      <div class="container split">
+        <div>
           <h2>Website design services in Ludhiana</h2>
-          <p>Looking for a website design company in Ludhiana? You work directly with me, the person who designs and builds your site. No confusing tech talk. I handle the design, the setup and the details.</p>
+          <p>Looking for a website design company in Ludhiana? You work directly with me, the person who designs and builds your site. Most of my clients are businesses where people search on a phone and then call, message or walk in. I build for exactly that moment.</p>
+          <p class="muted">Every site comes with WhatsApp and call buttons, Google Maps, the basic Google setup, and it's yours: the domain and the website are in your name.</p>
         </div>
-        <div class="grid-3">
-          <article class="card service-card reveal">
-            <div class="service-icon"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>
-            <h3>Business Websites</h3>
-            <p>Professional websites that explain what you do, build trust and turn visitors into calls and enquiries.</p>
-          </article>
-          <article class="card service-card reveal">
-            <div class="service-icon"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg></div>
-            <h3>Mobile-Friendly Design</h3>
-            <p>Most of your customers are on their phones. Every site I build looks and works great on any screen.</p>
-          </article>
-          <article class="card service-card reveal">
-            <div class="service-icon"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg></div>
-            <h3>Google Maps &amp; SEO Setup</h3>
-            <p>Get found when people search nearby — Google Maps, Business Profile and search basics set up for you.</p>
-          </article>
-          <article class="card service-card reveal">
-            <div class="service-icon"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><path d="m9 16 2 2 4-4"/></svg></div>
-            <h3>WhatsApp &amp; Booking</h3>
-            <p>One-tap WhatsApp chat, click-to-call and appointment or booking forms so customers can reach you instantly.</p>
-          </article>
-          <article class="card service-card reveal">
-            <div class="service-icon"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 7-8.5 8.5-5-5L2 17"/><path d="M16 7h6v6"/></svg></div>
-            <h3>SEO &amp; Google Ranking</h3>
-            <p>Get found by more customers on Google Search and Google Maps with ongoing local SEO.</p>
-          </article>
-          <article class="card service-card reveal">
-            <div class="service-icon"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></div>
-            <h3>Website Maintenance</h3>
-            <p>I keep your website updated, secure and running smoothly every month.</p>
-          </article>
-        </div>
-        <a class="card niche-banner reveal" href="/doctors">
-          <span class="niche-ico">🩺</span>
-          <span class="niche-text"><strong>Run a clinic or practice?</strong> See website design for doctors: appointment requests, timings, maps and more.</span>
-          <span class="link-arrow">Websites for doctors <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
-        </a>
+        <ul class="index-list" aria-label="Who I build websites for">
+          <li><a href="/doctors"><span class="idx-title">Doctors &amp; clinics</span><span class="idx-desc">Appointment requests, OPD timings, directions</span><span class="idx-arrow" aria-hidden="true">→</span></a></li>
+          <li><a href="/restaurants"><span class="idx-title">Restaurants &amp; cafés</span><span class="idx-desc">Menu, WhatsApp orders, table bookings</span><span class="idx-arrow" aria-hidden="true">→</span></a></li>
+          <li><a href="/shops"><span class="idx-title">Local shops</span><span class="idx-desc">Products, timings, festival offers</span><span class="idx-arrow" aria-hidden="true">→</span></a></li>
+          <li><a href="/services"><span class="idx-title">Service businesses</span><span class="idx-desc">Salons, tutors, repairs: bookings and calls</span><span class="idx-arrow" aria-hidden="true">→</span></a></li>
+          <li><a href="/hosiery"><span class="idx-title">Hosiery &amp; garments</span><span class="idx-desc">Your range and wholesale enquiries</span><span class="idx-arrow" aria-hidden="true">→</span></a></li>
+        </ul>
       </div>
     </section>
 
-    <!-- ================= FEATURED PROJECTS (from js/data.js) ================= -->
-    <section class="section section-soft" id="work">
+    <section class="band" id="work">
       <div class="container">
-        <div class="section-head reveal">
-          <span class="eyebrow">Featured work</span>
-          <h2>Recent websites</h2>
-          <p>A few of the websites I've designed and built.</p>
+        <div class="split">
+          <div>
+            <h2>Recent websites, with my notes</h2>
+            <p class="muted">Here's why things sit where they do. Every choice on a small-business site should make it easier for someone to call, book or find you.</p>
+          </div>
         </div>
-        <div class="project-grid cols-3" data-projects="featured"></div>
-        <div class="section-foot"><a class="btn btn-outline" href="/portfolio">See all projects <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a></div>
+        <div class="phones-strip">
+          <figure class="annotated">
+          <ul class="notes notes-left"><li class="note"><svg viewBox="0 0 32 32" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7c9-3 18 2 23 13"/><path d="M20 19l6 2 1-7"/></svg>Clinic address on the first screen, so parents know they've found the right place</li></ul>
+          <div class="phone"><img src="/images/projects/pediatric-clinic-mobile.webp" alt="Doctor's Clinic website in Ludhiana – mobile view (Child Specialist Clinic)" width="390" height="844" loading="lazy"></div>
+          <ul class="notes notes-right"><li class="note"><svg viewBox="0 0 32 32" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7c9-3 18 2 23 13"/><path d="M20 19l6 2 1-7"/></svg>“Request an Appointment” is the biggest button</li><li class="note"><svg viewBox="0 0 32 32" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7c9-3 18 2 23 13"/><path d="M20 19l6 2 1-7"/></svg>Call and Request visit stay at the bottom of the phone while you scroll</li></ul>
+          <figcaption class="who">Child specialist clinic, SBS Nagar, Ludhiana</figcaption>
+        </figure>
+          <figure class="annotated">
+          <ul class="notes notes-left"><li class="note"><svg viewBox="0 0 32 32" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7c9-3 18 2 23 13"/><path d="M20 19l6 2 1-7"/></svg>Market and road name at the top: that's how people in Ludhiana give directions</li></ul>
+          <div class="phone"><img src="/images/projects/grace-unisex-salon-mobile.webp" alt="Salon website in Ludhiana – mobile view (Grace Unisex Salon)" width="390" height="844" loading="lazy"></div>
+          <ul class="notes notes-right"><li class="note"><svg viewBox="0 0 32 32" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7c9-3 18 2 23 13"/><path d="M20 19l6 2 1-7"/></svg>Book on WhatsApp first, call second</li><li class="note"><svg viewBox="0 0 32 32" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7c9-3 18 2 23 13"/><path d="M20 19l6 2 1-7"/></svg>Opening time right under the buttons</li></ul>
+          <figcaption class="who">Grace Unisex Salon, Pakhowal Road, Ludhiana</figcaption>
+        </figure>
+        </div>
+        <h3 style="margin-top:64px">More of my work</h3>
+        <div class="work-row" data-projects="featured"></div>
+        <p style="margin-top:24px"><a class="text-link" href="/portfolio">See every project in the portfolio</a></p>
       </div>
     </section>
 
-    <!-- ================= HOW IT WORKS ================= -->
-    <section class="section">
-      <div class="container">
-        <div class="section-head reveal">
-          <span class="eyebrow">How it works</span>
-          <h2>Your website in 3 simple steps</h2>
+    <section class="band band-alt">
+      <div class="container split split-rev">
+        <div>
+          <h2>How working with me goes</h2>
+          <p class="muted">No forms to fill, no long meetings. Most of it happens on WhatsApp.</p>
         </div>
-        <div class="steps">
-          <article class="card step reveal"><span class="step-num">1</span><h3>Tell me about your business</h3><p>A quick WhatsApp chat or call about your business, your customers and what you need.</p></article>
-          <article class="card step reveal"><span class="step-num">2</span><h3>I design &amp; build it</h3><p>You see the design, share feedback, and I build a fast, mobile-friendly website.</p></article>
-          <article class="card step reveal"><span class="step-num">3</span><h3>Go live &amp; get customers</h3><p>Your site goes live with WhatsApp, Google Maps and enquiry forms ready to bring in customers.</p></article>
-        </div>
+        <ol class="timeline">
+          <li><h3>You tell me about your business</h3><p>A short WhatsApp chat or call: what you do, who your customers are, and what you want the website to do for you.</p></li>
+          <li><h3>I design it and you see it</h3><p>You see the design before it goes live, tell me what to change, and I build a fast, mobile-friendly site.</p></li>
+          <li><h3>It goes live with everything connected</h3><p>WhatsApp, Google Maps and the enquiry form all working on day one. After that, I'm one message away.</p></li>
+        </ol>
       </div>
     </section>
 
-    <!-- ================= FEATURED REVIEWS (from js/data.js) ================= -->
-    <section class="section section-soft">
+    <section class="band">
       <div class="container">
-        <div class="section-head reveal">
-          <span class="eyebrow">Client reviews</span>
-          <h2>What clients say</h2>
-        </div>
-        <div class="review-grid" data-reviews="featured"></div>
-        <div class="section-foot"><a class="link-arrow" href="/reviews">Read all reviews <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a></div>
+        <h2>What clients say</h2>
+        <div class="review-grid cols-2" data-reviews="featured"></div>
       </div>
     </section>
 
-    <!-- ================= ARTICLE: choosing a website designer in Ludhiana ================= -->
-    <section class="section" id="guide">
+    <section class="band band-alt" id="guide">
       <div class="container">
-        <article class="prose reveal">
-          <span class="eyebrow">Guide</span>
+        <article class="prose">
           <h2>How to choose a website designer in Ludhiana</h2>
           <p class="prose-lead">Search for a <strong>website designer in Ludhiana</strong> and you'll find hundreds of options, from students and freelancers to large agencies. Here's how to pick the right one for a small business, without paying for things you don't need.</p>
 
@@ -309,7 +259,7 @@
             <li>Real photos, real reviews and clear prices where possible</li>
           </ul>
           <h3>Websites for your type of business</h3>
-          <p>Every business needs something slightly different. See what I build for yours:</p>
+          <p>Every business needs something slightly different:</p>
           <ul>
             <li><a href="/doctors">Website for doctors in Ludhiana</a>: appointment requests, OPD timings and Google Maps</li>
             <li><a href="/restaurants">Restaurant website design</a> with an online menu and WhatsApp ordering</li>
@@ -324,54 +274,42 @@
       </div>
     </section>
 
-    <!-- ================= CALL-TO-ACTION BANNER ================= -->
-    <section class="cta-banner">
+    <section class="signoff">
       <div class="container">
-        <div class="cta-box reveal">
-          <h2>Ready to take your business online?</h2>
-          <p>Message me on WhatsApp — tell me about your business and I'll suggest the right website for your budget. No obligation.</p>
-          <div class="btn-row">
-            <a class="btn btn-white btn-lg" href="https://wa.me/917973353244" data-wa="Hi Harnoor! I saw your website and I'd like to know more about getting a website for my business." target="_blank" rel="noopener">Chat on WhatsApp</a>
-            <a class="btn btn-ghost-light btn-lg" href="/pricing">See Packages</a>
-          </div>
+        <h2>Tell me about your business.</h2>
+        <p>Send me a WhatsApp message with what you do and where you are. I'll reply myself with what I'd build for you and what it would cost. No obligation.</p>
+        <div class="btn-row">
+          <a class="btn btn-whatsapp btn-lg" href="https://wa.me/917973353244" data-wa="Hi Harnoor! I saw your website and I&#x27;d like to know more about getting a website for my business." target="_blank" rel="noopener">Message me on WhatsApp</a>
+          <a class="btn btn-outline btn-lg" href="/pricing">See packages and prices</a>
         </div>
+        <span class="hand">Harnoor</span>
       </div>
     </section>
   </main>
 
-  <!-- ================= FOOTER ================= -->
   <footer class="site-footer">
     <div class="container footer-grid">
       <div class="footer-brand">
         <a href="/" class="logo" aria-label="Upward Web by Harnoor Singh — home">
-          <svg class="logo-icon" viewBox="0 0 72 72" aria-hidden="true" focusable="false"><rect class="logo-icon-bg" width="72" height="72" rx="16" fill="#8B5E3C"/><path class="logo-icon-fg" d="M22 28 V42 A12 12 0 0 0 46 42 V18" stroke="#FFFFFF" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path class="logo-icon-fg" d="M38 25 L46 17 L54 25" stroke="#FFFFFF" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
-          <span class="logo-text"><span class="logo-name">Upward <span class="logo-accent">Web</span></span><span class="logo-tagline">by Harnoor Singh</span></span>
-        </a>
-        <p>Website designer in Ludhiana, Punjab. Affordable, mobile-friendly websites for clinics, shops, restaurants and service businesses across India.</p>
+        <svg class="logo-icon" viewBox="0 0 72 72" aria-hidden="true" focusable="false"><rect class="logo-icon-bg" width="72" height="72" rx="16" fill="#8B5E3C"/><path class="logo-icon-fg" d="M22 28 V42 A12 12 0 0 0 46 42 V18" stroke="#FFFFFF" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path class="logo-icon-fg" d="M38 25 L46 17 L54 25" stroke="#FFFFFF" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+        <span class="logo-text"><span class="logo-name">Upward <span class="logo-accent">Web</span></span> <span class="logo-tagline">by Harnoor Singh</span></span>
+      </a>
+        <p>I'm Harnoor Singh, a website designer in Ludhiana, Punjab. I design and build websites for clinics, shops, restaurants and service businesses, and I answer every message myself.</p>
       </div>
       <div>
-        <h3>Quick Links</h3>
+        <h2>Pages</h2>
         <ul>
           <li><a href="/">Home</a></li>
           <li><a href="/portfolio">Portfolio</a></li>
-          <li><a href="/pricing">Packages &amp; Pricing</a></li>
+          <li><a href="/pricing">Packages &amp; prices</a></li>
+          <li><a href="/pricing#monthly-plans">Monthly maintenance</a></li>
+          <li><a href="/seo">SEO &amp; Google Business Profile</a></li>
           <li><a href="/reviews">Reviews</a></li>
           <li><a href="/contact">Contact</a></li>
         </ul>
       </div>
       <div>
-        <h3>Services</h3>
-        <ul>
-          <li><a href="/pricing">Business Websites</a></li>
-          <li><a href="/pricing">Mobile-Friendly Design</a></li>
-          <li><a href="/pricing">Google Maps &amp; SEO Setup</a></li>
-          <li><a href="/pricing">WhatsApp &amp; Booking Integration</a></li>
-          <li><a href="/seo">SEO Services</a></li>
-          <li><a href="/pricing#monthly-plans">Website Maintenance</a></li>
-        </ul>
-      </div>
-      <div>
-        <h3>Who I work with</h3>
+        <h2>Websites for</h2>
         <ul>
           <li><a href="/doctors">Doctors &amp; Clinics</a></li>
           <li><a href="/restaurants">Restaurants &amp; Cafés</a></li>
@@ -381,23 +319,31 @@
         </ul>
       </div>
       <div>
-        <h3>Contact</h3>
+        <h2>Contact</h2>
         <ul class="footer-contact">
-          <li><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg><a href="https://wa.me/917973353244" data-wa="Hi Harnoor! I saw your website and I'd like to know more about getting a website for my business." target="_blank" rel="noopener">WhatsApp: <span data-site="phone-text">+91 79733 53244</span></a></li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg><a href="https://wa.me/917973353244" data-wa="Hi Harnoor! I saw your website and I&#x27;d like to know more about getting a website for my business." target="_blank" rel="noopener">WhatsApp: <span data-site="phone-text">+91 79733 53244</span></a></li>
           <li><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg><a href="mailto:harnoor459456@gmail.com" data-site="email">harnoor459456@gmail.com</a></li>
           <li><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg><span data-site="location-text">Ludhiana, Punjab, India</span></li>
         </ul>
       </div>
     </div>
+    <div class="container footer-legal">
+      <ul aria-label="Legal">
+        <li><a href="/privacy-policy">Privacy Policy</a></li>
+        <li><a href="/terms">Terms of Service</a></li>
+        <li><a href="/cookie-policy">Cookie Policy</a></li>
+        <li><a href="/refund-policy">Refund Policy</a></li>
+        <li><button class="link-button" type="button" data-cookie-settings>Cookie settings</button></li>
+      </ul>
+    </div>
     <div class="container footer-bottom">
       <span>&copy; <span data-year>2026</span> Harnoor Singh. All rights reserved.</span>
-      <span>Designed &amp; built in Ludhiana</span>
+      <span>Designed and built by hand in Ludhiana</span>
     </div>
   </footer>
 
-  <!-- Floating WhatsApp button (every page) -->
-  <a class="wa-float" href="https://wa.me/917973353244" data-wa="Hi Harnoor! I saw your website and I'd like to know more about getting a website for my business." target="_blank" rel="noopener" aria-label="Chat with Harnoor on WhatsApp">
-    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg><span class="wa-float-label">Chat with me</span>
+  <a class="wa-float" href="https://wa.me/917973353244" data-wa="Hi Harnoor! I saw your website and I&#x27;d like to know more about getting a website for my business." target="_blank" rel="noopener" aria-label="Message Harnoor on WhatsApp">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg><span class="wa-float-label">WhatsApp me</span>
   </a>
 </body>
 </html>
