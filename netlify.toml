@@ -247,6 +247,42 @@
   to = "/account.html"
   status = 200
 [[redirects]]
+  from = "/privacy-policy.html"
+  to = "/privacy-policy"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/privacy-policy"
+  to = "/privacy-policy.html"
+  status = 200
+[[redirects]]
+  from = "/terms.html"
+  to = "/terms"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/terms"
+  to = "/terms.html"
+  status = 200
+[[redirects]]
+  from = "/cookie-policy.html"
+  to = "/cookie-policy"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/cookie-policy"
+  to = "/cookie-policy.html"
+  status = 200
+[[redirects]]
+  from = "/refund-policy.html"
+  to = "/refund-policy"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/refund-policy"
+  to = "/refund-policy.html"
+  status = 200
+[[redirects]]
   from = "/thank-you.html"
   to = "/thank-you"
   status = 301

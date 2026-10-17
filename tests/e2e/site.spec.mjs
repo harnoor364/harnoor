@@ -3,7 +3,7 @@
    and the key parts of the site still work. */
 import { test, expect } from "@playwright/test";
 
-const PAGES = ["index", "portfolio", "pricing", "seo", "reviews", "contact", "doctors", "restaurants", "shops", "services", "hosiery", "thank-you", "404", "signup", "login", "forgot-password", "reset-password", "account"];
+const PAGES = ["index", "portfolio", "pricing", "seo", "reviews", "contact", "doctors", "restaurants", "shops", "services", "hosiery", "thank-you", "404", "signup", "login", "forgot-password", "reset-password", "account", "privacy-policy", "terms", "cookie-policy", "refund-policy"];
 // Google Fonts may be unreachable in CI sandboxes; the site falls back to system fonts.
 const IGNORE = /fonts\.(googleapis|gstatic)\.com/;
 
