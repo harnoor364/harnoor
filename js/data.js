@@ -26,6 +26,11 @@ const SITE = {
   email: "harnoor459456@gmail.com",
   location: "Ludhiana, Punjab, India",
 
+  // Google Analytics 4 measurement ID, e.g. "G-ABC123XYZ". Leave "" for no analytics.
+  // It only ever loads after a visitor allows "Analytics" in the cookie banner.
+  // Before adding it, also update the CSP: see docs/COOKIES-AND-ANALYTICS.md.
+  analyticsId: "",
+
   // Message pre-filled when someone taps a general WhatsApp button
   defaultWhatsAppMessage:
     "Hi Harnoor! I saw your website and I'd like to know more about getting a website for my business."
