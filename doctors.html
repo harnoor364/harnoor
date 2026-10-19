@@ -10,7 +10,7 @@
 
   <!-- Open Graph: controls the preview when this link is shared on WhatsApp / Facebook -->
   <meta property="og:type" content="website">
-  <meta property="og:site_name" content="Harnoor Singh · Web Design">
+  <meta property="og:site_name" content="Upward Web">
   <meta property="og:locale" content="en_IN">
   <meta property="og:title" content="Website for Doctors in Ludhiana | Clinic Website Design">
   <meta property="og:description" content="Website for doctors in Ludhiana: appointment requests, OPD timings, Google Maps and WhatsApp on a fast, mobile-friendly clinic site. Chat on WhatsApp.">
@@ -43,27 +43,8 @@
   <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
-    {
-      "@type": "ListItem",
-      "position": 1,
-      "name": "Home",
-      "item": "https://harnoorsingh.in/"
-    },
-    {
-      "@type": "ListItem",
-      "position": 2,
-      "name": "Websites for Doctors & Clinics",
-      "item": "https://harnoorsingh.in/doctors"
-    }
-  ]
-}
-  </script>
-  <script type="application/ld+json">
-{
-  "@context": "https://schema.org",
   "@type": "FAQPage",
+  "@id": "https://harnoorsingh.in/doctors#faq",
   "mainEntity": [
     {
       "@type": "Question",
@@ -108,6 +89,100 @@
   ]
 }
   </script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://harnoorsingh.in/#website",
+      "url": "https://harnoorsingh.in/",
+      "name": "Upward Web",
+      "alternateName": [
+        "Upward Web by Harnoor Singh",
+        "Harnoor Singh Web Design"
+      ],
+      "description": "Website design, Google Business Profile setup and local SEO for small businesses in Ludhiana.",
+      "publisher": {
+        "@id": "https://harnoorsingh.in/#business"
+      },
+      "inLanguage": "en-IN"
+    },
+    {
+      "@type": "ProfessionalService",
+      "@id": "https://harnoorsingh.in/#business",
+      "name": "Upward Web",
+      "url": "https://harnoorsingh.in/"
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://harnoorsingh.in/doctors#webpage",
+      "url": "https://harnoorsingh.in/doctors",
+      "name": "Website for Doctors & Clinics in Ludhiana",
+      "description": "Website for doctors in Ludhiana: appointment requests, OPD timings, Google Maps and WhatsApp on a fast, mobile-friendly clinic site.",
+      "isPartOf": {
+        "@id": "https://harnoorsingh.in/#website"
+      },
+      "about": {
+        "@id": "https://harnoorsingh.in/#business"
+      },
+      "inLanguage": "en-IN",
+      "breadcrumb": {
+        "@id": "https://harnoorsingh.in/doctors#breadcrumb"
+      },
+      "mainEntity": {
+        "@id": "https://harnoorsingh.in/doctors#service"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://harnoorsingh.in/doctors#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://harnoorsingh.in/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Doctors & Clinics",
+          "item": "https://harnoorsingh.in/doctors"
+        }
+      ]
+    },
+    {
+      "@type": "Service",
+      "@id": "https://harnoorsingh.in/doctors#service",
+      "name": "Website for Doctors & Clinics in Ludhiana",
+      "serviceType": "Website design for doctors and clinics",
+      "description": "Website for doctors in Ludhiana: appointment requests, OPD timings, Google Maps and WhatsApp on a fast, mobile-friendly clinic site.",
+      "provider": {
+        "@id": "https://harnoorsingh.in/#business"
+      },
+      "areaServed": {
+        "@type": "City",
+        "name": "Ludhiana",
+        "sameAs": "https://en.wikipedia.org/wiki/Ludhiana"
+      },
+      "url": "https://harnoorsingh.in/doctors",
+      "audience": {
+        "@type": "BusinessAudience",
+        "audienceType": "Doctors, clinics and healthcare practices"
+      },
+      "offers": {
+        "@type": "AggregateOffer",
+        "lowPrice": "8000",
+        "highPrice": "50000",
+        "priceCurrency": "INR",
+        "url": "https://harnoorsingh.in/pricing",
+        "offerCount": "3"
+      }
+    }
+  ]
+}
+</script>
 </head>
 <body data-page="doctors">
   <a class="skip-link" href="#main">Skip to content</a>

@@ -10,7 +10,7 @@
 
   <!-- Open Graph: controls the preview when this link is shared on WhatsApp / Facebook -->
   <meta property="og:type" content="website">
-  <meta property="og:site_name" content="Harnoor Singh · Web Design">
+  <meta property="og:site_name" content="Upward Web">
   <meta property="og:locale" content="en_IN">
   <meta property="og:title" content="Website for Hosiery Business in Ludhiana | Harnoor Singh">
   <meta property="og:description" content="Website for hosiery business in Ludhiana: product range, wholesale WhatsApp enquiries and Google Maps, for buyers across India. Chat on WhatsApp today.">
@@ -44,6 +44,7 @@
 {
   "@context": "https://schema.org",
   "@type": "FAQPage",
+  "@id": "https://harnoorsingh.in/hosiery#faq",
   "mainEntity": [
     {
       "@type": "Question",
@@ -80,26 +81,100 @@
   ]
 }
   </script>
-  <script type="application/ld+json">
+<script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
+  "@graph": [
     {
-      "@type": "ListItem",
-      "position": 1,
-      "name": "Home",
-      "item": "https://harnoorsingh.in/"
+      "@type": "WebSite",
+      "@id": "https://harnoorsingh.in/#website",
+      "url": "https://harnoorsingh.in/",
+      "name": "Upward Web",
+      "alternateName": [
+        "Upward Web by Harnoor Singh",
+        "Harnoor Singh Web Design"
+      ],
+      "description": "Website design, Google Business Profile setup and local SEO for small businesses in Ludhiana.",
+      "publisher": {
+        "@id": "https://harnoorsingh.in/#business"
+      },
+      "inLanguage": "en-IN"
     },
     {
-      "@type": "ListItem",
-      "position": 2,
-      "name": "Websites for Hosiery Businesses",
-      "item": "https://harnoorsingh.in/hosiery"
+      "@type": "ProfessionalService",
+      "@id": "https://harnoorsingh.in/#business",
+      "name": "Upward Web",
+      "url": "https://harnoorsingh.in/"
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://harnoorsingh.in/hosiery#webpage",
+      "url": "https://harnoorsingh.in/hosiery",
+      "name": "Website for Hosiery & Garment Businesses in Ludhiana",
+      "description": "Website for hosiery businesses in Ludhiana: product range, wholesale WhatsApp enquiries and Google Maps, for buyers across India.",
+      "isPartOf": {
+        "@id": "https://harnoorsingh.in/#website"
+      },
+      "about": {
+        "@id": "https://harnoorsingh.in/#business"
+      },
+      "inLanguage": "en-IN",
+      "breadcrumb": {
+        "@id": "https://harnoorsingh.in/hosiery#breadcrumb"
+      },
+      "mainEntity": {
+        "@id": "https://harnoorsingh.in/hosiery#service"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://harnoorsingh.in/hosiery#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://harnoorsingh.in/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Hosiery & Garments",
+          "item": "https://harnoorsingh.in/hosiery"
+        }
+      ]
+    },
+    {
+      "@type": "Service",
+      "@id": "https://harnoorsingh.in/hosiery#service",
+      "name": "Website for Hosiery & Garment Businesses in Ludhiana",
+      "serviceType": "Website design for hosiery and garment businesses",
+      "description": "Website for hosiery businesses in Ludhiana: product range, wholesale WhatsApp enquiries and Google Maps, for buyers across India.",
+      "provider": {
+        "@id": "https://harnoorsingh.in/#business"
+      },
+      "areaServed": {
+        "@type": "City",
+        "name": "Ludhiana",
+        "sameAs": "https://en.wikipedia.org/wiki/Ludhiana"
+      },
+      "url": "https://harnoorsingh.in/hosiery",
+      "audience": {
+        "@type": "BusinessAudience",
+        "audienceType": "Hosiery manufacturers, garment businesses and wholesalers"
+      },
+      "offers": {
+        "@type": "AggregateOffer",
+        "lowPrice": "8000",
+        "highPrice": "50000",
+        "priceCurrency": "INR",
+        "url": "https://harnoorsingh.in/pricing",
+        "offerCount": "3"
+      }
     }
   ]
 }
-  </script>
+</script>
 </head>
 <body data-page="hosiery">
   <a class="skip-link" href="#main">Skip to content</a>

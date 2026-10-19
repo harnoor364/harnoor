@@ -10,7 +10,7 @@
 
   <!-- Open Graph: controls the preview when this link is shared on WhatsApp / Facebook -->
   <meta property="og:type" content="website">
-  <meta property="og:site_name" content="Harnoor Singh · Web Design">
+  <meta property="og:site_name" content="Upward Web">
   <meta property="og:locale" content="en_IN">
   <meta property="og:title" content="Website for Service Businesses in Ludhiana | Harnoor Singh">
   <meta property="og:description" content="Website for service businesses in Ludhiana: salons, tutors and repair services get bookings and WhatsApp enquiries from Google. Chat on WhatsApp today.">
@@ -44,6 +44,7 @@
 {
   "@context": "https://schema.org",
   "@type": "FAQPage",
+  "@id": "https://harnoorsingh.in/services#faq",
   "mainEntity": [
     {
       "@type": "Question",
@@ -72,26 +73,100 @@
   ]
 }
   </script>
-  <script type="application/ld+json">
+<script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
+  "@graph": [
     {
-      "@type": "ListItem",
-      "position": 1,
-      "name": "Home",
-      "item": "https://harnoorsingh.in/"
+      "@type": "WebSite",
+      "@id": "https://harnoorsingh.in/#website",
+      "url": "https://harnoorsingh.in/",
+      "name": "Upward Web",
+      "alternateName": [
+        "Upward Web by Harnoor Singh",
+        "Harnoor Singh Web Design"
+      ],
+      "description": "Website design, Google Business Profile setup and local SEO for small businesses in Ludhiana.",
+      "publisher": {
+        "@id": "https://harnoorsingh.in/#business"
+      },
+      "inLanguage": "en-IN"
     },
     {
-      "@type": "ListItem",
-      "position": 2,
-      "name": "Websites for Service Businesses",
-      "item": "https://harnoorsingh.in/services"
+      "@type": "ProfessionalService",
+      "@id": "https://harnoorsingh.in/#business",
+      "name": "Upward Web",
+      "url": "https://harnoorsingh.in/"
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://harnoorsingh.in/services#webpage",
+      "url": "https://harnoorsingh.in/services",
+      "name": "Website for Service Businesses in Ludhiana",
+      "description": "Website for service businesses in Ludhiana: salons, tutors and repair services get bookings and WhatsApp enquiries from Google.",
+      "isPartOf": {
+        "@id": "https://harnoorsingh.in/#website"
+      },
+      "about": {
+        "@id": "https://harnoorsingh.in/#business"
+      },
+      "inLanguage": "en-IN",
+      "breadcrumb": {
+        "@id": "https://harnoorsingh.in/services#breadcrumb"
+      },
+      "mainEntity": {
+        "@id": "https://harnoorsingh.in/services#service"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://harnoorsingh.in/services#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://harnoorsingh.in/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Service Businesses",
+          "item": "https://harnoorsingh.in/services"
+        }
+      ]
+    },
+    {
+      "@type": "Service",
+      "@id": "https://harnoorsingh.in/services#service",
+      "name": "Website for Service Businesses in Ludhiana",
+      "serviceType": "Website design for service businesses",
+      "description": "Website for service businesses in Ludhiana: salons, tutors and repair services get bookings and WhatsApp enquiries from Google.",
+      "provider": {
+        "@id": "https://harnoorsingh.in/#business"
+      },
+      "areaServed": {
+        "@type": "City",
+        "name": "Ludhiana",
+        "sameAs": "https://en.wikipedia.org/wiki/Ludhiana"
+      },
+      "url": "https://harnoorsingh.in/services",
+      "audience": {
+        "@type": "BusinessAudience",
+        "audienceType": "Salons, tutors, repair and other service businesses"
+      },
+      "offers": {
+        "@type": "AggregateOffer",
+        "lowPrice": "8000",
+        "highPrice": "50000",
+        "priceCurrency": "INR",
+        "url": "https://harnoorsingh.in/pricing",
+        "offerCount": "3"
+      }
     }
   ]
 }
-  </script>
+</script>
 </head>
 <body data-page="services">
   <a class="skip-link" href="#main">Skip to content</a>
