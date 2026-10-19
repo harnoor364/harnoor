@@ -10,7 +10,7 @@
 
   <!-- Open Graph: controls the preview when this link is shared on WhatsApp / Facebook -->
   <meta property="og:type" content="website">
-  <meta property="og:site_name" content="Harnoor Singh · Web Design">
+  <meta property="og:site_name" content="Upward Web">
   <meta property="og:locale" content="en_IN">
   <meta property="og:title" content="Website Design Cost in Ludhiana | Packages from ₹8,000">
   <meta property="og:description" content="Website design cost in Ludhiana: clear one-time packages from ₹8,000 to ₹50,000, plus optional monthly plans from ₹4,999. Chat on WhatsApp for a quote.">
@@ -44,6 +44,7 @@
 {
   "@context": "https://schema.org",
   "@type": "FAQPage",
+  "@id": "https://harnoorsingh.in/pricing#faq",
   "mainEntity": [
     {
       "@type": "Question",
@@ -88,26 +89,250 @@
   ]
 }
   </script>
-  <script type="application/ld+json">
+<script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
+  "@graph": [
     {
-      "@type": "ListItem",
-      "position": 1,
-      "name": "Home",
-      "item": "https://harnoorsingh.in/"
+      "@type": "WebSite",
+      "@id": "https://harnoorsingh.in/#website",
+      "url": "https://harnoorsingh.in/",
+      "name": "Upward Web",
+      "alternateName": [
+        "Upward Web by Harnoor Singh",
+        "Harnoor Singh Web Design"
+      ],
+      "description": "Website design, Google Business Profile setup and local SEO for small businesses in Ludhiana.",
+      "publisher": {
+        "@id": "https://harnoorsingh.in/#business"
+      },
+      "inLanguage": "en-IN"
     },
     {
-      "@type": "ListItem",
-      "position": 2,
-      "name": "Packages",
-      "item": "https://harnoorsingh.in/pricing"
+      "@type": "ProfessionalService",
+      "@id": "https://harnoorsingh.in/#business",
+      "name": "Upward Web",
+      "url": "https://harnoorsingh.in/"
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://harnoorsingh.in/pricing#webpage",
+      "url": "https://harnoorsingh.in/pricing",
+      "name": "Website Design Cost in Ludhiana | Packages from ₹8,000",
+      "description": "Fixed website design packages for small businesses in Ludhiana: Basic ₹8,000–10,000, Standard ₹20,000–30,000, Premium ₹50,000, plus monthly maintenance and SEO plans.",
+      "isPartOf": {
+        "@id": "https://harnoorsingh.in/#website"
+      },
+      "about": {
+        "@id": "https://harnoorsingh.in/#business"
+      },
+      "inLanguage": "en-IN",
+      "breadcrumb": {
+        "@id": "https://harnoorsingh.in/pricing#breadcrumb"
+      },
+      "mainEntity": {
+        "@id": "https://harnoorsingh.in/pricing#catalog"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://harnoorsingh.in/pricing#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://harnoorsingh.in/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Packages",
+          "item": "https://harnoorsingh.in/pricing"
+        }
+      ]
+    },
+    {
+      "@type": "OfferCatalog",
+      "@id": "https://harnoorsingh.in/pricing#catalog",
+      "name": "Website packages and monthly plans",
+      "itemListElement": [
+        {
+          "@type": "OfferCatalog",
+          "name": "Website design packages (one-time fee)",
+          "itemListElement": [
+            {
+              "@type": "Offer",
+              "name": "Basic website package",
+              "description": "Up to 5 pages, mobile-friendly design, contact form, WhatsApp and click-to-call buttons, basic on-page SEO, help with domain and hosting setup.",
+              "priceCurrency": "INR",
+              "priceSpecification": {
+                "@type": "PriceSpecification",
+                "minPrice": 8000,
+                "maxPrice": 10000,
+                "priceCurrency": "INR"
+              },
+              "url": "https://harnoorsingh.in/pricing",
+              "seller": {
+                "@id": "https://harnoorsingh.in/#business"
+              },
+              "itemOffered": {
+                "@type": "Service",
+                "name": "Basic website package",
+                "provider": {
+                  "@id": "https://harnoorsingh.in/#business"
+                }
+              }
+            },
+            {
+              "@type": "Offer",
+              "name": "Standard website package",
+              "description": "Up to 10 pages, everything in Basic, Search Console and sitemap setup, Google Maps and Google Business Profile setup, booking form, photo gallery, 1 month of free support.",
+              "priceCurrency": "INR",
+              "priceSpecification": {
+                "@type": "PriceSpecification",
+                "minPrice": 20000,
+                "maxPrice": 30000,
+                "priceCurrency": "INR"
+              },
+              "url": "https://harnoorsingh.in/pricing",
+              "seller": {
+                "@id": "https://harnoorsingh.in/#business"
+              },
+              "itemOffered": {
+                "@type": "Service",
+                "name": "Standard website package",
+                "provider": {
+                  "@id": "https://harnoorsingh.in/#business"
+                }
+              }
+            },
+            {
+              "@type": "Offer",
+              "name": "Premium website package",
+              "description": "Fully custom design, everything in Standard, advanced features such as online payments, menus or product catalogue, blog, speed optimisation, priority support, 3 months of free support.",
+              "priceCurrency": "INR",
+              "priceSpecification": {
+                "@type": "PriceSpecification",
+                "price": "50000",
+                "priceCurrency": "INR"
+              },
+              "url": "https://harnoorsingh.in/pricing",
+              "seller": {
+                "@id": "https://harnoorsingh.in/#business"
+              },
+              "itemOffered": {
+                "@type": "Service",
+                "name": "Premium website package",
+                "provider": {
+                  "@id": "https://harnoorsingh.in/#business"
+                }
+              },
+              "price": "50000"
+            }
+          ]
+        },
+        {
+          "@type": "OfferCatalog",
+          "name": "Monthly Care & Growth plans",
+          "itemListElement": [
+            {
+              "@type": "Offer",
+              "name": "Basic Maintenance plan",
+              "description": "Uptime monitoring, up to 5 small updates per month, monthly backups, security and broken-link checks, WhatsApp support.",
+              "priceCurrency": "INR",
+              "priceSpecification": {
+                "@type": "UnitPriceSpecification",
+                "price": "4999",
+                "priceCurrency": "INR",
+                "unitCode": "MON",
+                "unitText": "month",
+                "referenceQuantity": {
+                  "@type": "QuantitativeValue",
+                  "value": 1,
+                  "unitCode": "MON"
+                }
+              },
+              "url": "https://harnoorsingh.in/pricing#monthly-plans",
+              "seller": {
+                "@id": "https://harnoorsingh.in/#business"
+              },
+              "itemOffered": {
+                "@type": "Service",
+                "name": "Basic Maintenance plan",
+                "provider": {
+                  "@id": "https://harnoorsingh.in/#business"
+                }
+              },
+              "price": "4999"
+            },
+            {
+              "@type": "Offer",
+              "name": "SEO Growth plan",
+              "description": "Google Business Profile optimisation and monthly posts, local keyword research, on-page SEO, local citations, monthly ranking and traffic report.",
+              "priceCurrency": "INR",
+              "priceSpecification": {
+                "@type": "UnitPriceSpecification",
+                "price": "24999",
+                "priceCurrency": "INR",
+                "unitCode": "MON",
+                "unitText": "month",
+                "referenceQuantity": {
+                  "@type": "QuantitativeValue",
+                  "value": 1,
+                  "unitCode": "MON"
+                }
+              },
+              "url": "https://harnoorsingh.in/pricing#monthly-plans",
+              "seller": {
+                "@id": "https://harnoorsingh.in/#business"
+              },
+              "itemOffered": {
+                "@type": "Service",
+                "name": "SEO Growth plan",
+                "provider": {
+                  "@id": "https://harnoorsingh.in/#business"
+                }
+              },
+              "price": "24999"
+            },
+            {
+              "@type": "Offer",
+              "name": "Complete Care plan",
+              "description": "Everything in Basic Maintenance and SEO Growth, priority support, 1 new page or blog post per month.",
+              "priceCurrency": "INR",
+              "priceSpecification": {
+                "@type": "UnitPriceSpecification",
+                "price": "39999",
+                "priceCurrency": "INR",
+                "unitCode": "MON",
+                "unitText": "month",
+                "referenceQuantity": {
+                  "@type": "QuantitativeValue",
+                  "value": 1,
+                  "unitCode": "MON"
+                }
+              },
+              "url": "https://harnoorsingh.in/pricing#monthly-plans",
+              "seller": {
+                "@id": "https://harnoorsingh.in/#business"
+              },
+              "itemOffered": {
+                "@type": "Service",
+                "name": "Complete Care plan",
+                "provider": {
+                  "@id": "https://harnoorsingh.in/#business"
+                }
+              },
+              "price": "39999"
+            }
+          ]
+        }
+      ]
     }
   ]
 }
-  </script>
+</script>
 </head>
 <body data-page="pricing">
   <a class="skip-link" href="#main">Skip to content</a>
