@@ -1,8 +1,9 @@
-# Netlify settings. The only build step writes js/supabase-config.js from the
-# SUPABASE_URL / SUPABASE_ANON_KEY environment variables (see docs/CLIENT-PORTAL-SETUP.md).
+# Netlify settings. The build steps write js/supabase-config.js from the
+# SUPABASE_URL / SUPABASE_ANON_KEY environment variables (see docs/CLIENT-PORTAL-SETUP.md)
+# and regenerate sitemap.xml from the public pages (scripts/build-sitemap.mjs).
 [build]
   publish = "."
-  command = "node scripts/build-config.mjs"
+  command = "node scripts/build-config.mjs && node scripts/build-sitemap.mjs"
 
 # Security headers: block other sites from framing this site, stop
 # unexpected scripts from running, and force HTTPS.
@@ -41,6 +42,12 @@
 # The site's actual Netlify address (from the Netlify deploy checks) also redirects.
 [[redirects]]
   from = "https://cerulean-muffin-934237.netlify.app/*"
+  to = "https://harnoorsingh.in/:splat"
+  status = 301
+  force = true
+# www.harnoorsingh.in → harnoorsingh.in (active once www is added as a domain alias in Netlify).
+[[redirects]]
+  from = "https://www.harnoorsingh.in/*"
   to = "https://harnoorsingh.in/:splat"
   status = 301
   force = true

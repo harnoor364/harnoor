@@ -1,6 +1,11 @@
 User-agent: *
 Allow: /
-Disallow: /thank-you.html
+Disallow: /account
+Disallow: /login
+Disallow: /signup
+Disallow: /forgot-password
+Disallow: /reset-password
 Disallow: /thank-you
+Disallow: /404.html
 
 Sitemap: https://harnoorsingh.in/sitemap.xml
