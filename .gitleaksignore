@@ -5,3 +5,5 @@
 # public; it ships to every visitor's browser, and Row Level Security protects the data.
 # Secret keys (sb_secret_... / service_role) must never be added here; build-config refuses them.
 bb26eb9ffdfc837aec66bf75ac574abca3c17dcd:scripts/build-config.mjs:generic-api-key:19
+# Same as above: the Mumbai project's PUBLIC publishable key (not a secret).
+26f8142ee01768e9fa96e9c925e62ab02267b426:scripts/build-config.mjs:generic-api-key:19
