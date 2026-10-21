@@ -15,8 +15,8 @@ import fs from "node:fs";
 // Default: the live Upward Web project. Both values are PUBLIC (they ship to
 // every browser); Row Level Security keeps clients' data private. Netlify
 // environment variables, when set, override these.
-const DEFAULT_URL = "https://elyfxcnwiokdbsjnrszy.supabase.co";
-const DEFAULT_KEY = "sb_publishable_Ajq8vtc-bWSKaYAtfnpnQg_h4fJ_o7U";
+const DEFAULT_URL = "https://agrpvskzhehldjlmzpzt.supabase.co";
+const DEFAULT_KEY = "sb_publishable_1oRAipVieuxk-_57CqIx8Q_xUAoUzsx";
 
 const url = (process.env.SUPABASE_URL || DEFAULT_URL).trim().replace(/\/+$/, "");
 const key = (process.env.SUPABASE_ANON_KEY || DEFAULT_KEY).trim();
