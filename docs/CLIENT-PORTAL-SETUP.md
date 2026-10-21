@@ -58,6 +58,11 @@ Left menu → **Authentication**:
 
 ## 5. Connect the website (Netlify environment variables)
 
+> **Already done for the live project.** `scripts/build-config.mjs` has the live project's
+> URL and public publishable key built in (`elyfxcnwiokdbsjnrszy`), so the portal works
+> without Netlify variables. Only follow this step to switch to a different Supabase project:
+> the Netlify variables below override the built-in values.
+
 1. In Supabase: **Project Settings → API**. Copy:
    - **Project URL** (looks like `https://abcdefghijklm.supabase.co`)
    - the **anon / public** key (or the new **publishable** key that starts with `sb_publishable_`)

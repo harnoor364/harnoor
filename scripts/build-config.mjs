@@ -12,8 +12,14 @@
    ===================================================================== */
 import fs from "node:fs";
 
-const url = (process.env.SUPABASE_URL || "").trim().replace(/\/+$/, "");
-const key = (process.env.SUPABASE_ANON_KEY || "").trim();
+// Default: the live Upward Web project. Both values are PUBLIC (they ship to
+// every browser); Row Level Security keeps clients' data private. Netlify
+// environment variables, when set, override these.
+const DEFAULT_URL = "https://elyfxcnwiokdbsjnrszy.supabase.co";
+const DEFAULT_KEY = "sb_publishable_Ajq8vtc-bWSKaYAtfnpnQg_h4fJ_o7U";
+
+const url = (process.env.SUPABASE_URL || DEFAULT_URL).trim().replace(/\/+$/, "");
+const key = (process.env.SUPABASE_ANON_KEY || DEFAULT_KEY).trim();
 const OUT = "js/supabase-config.js";
 
 function fail(msg) {
