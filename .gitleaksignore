@@ -1,3 +1,7 @@
 # Known false positive: a FAKE test key ("AKIA" + "ABCDEFGHIJKLMNOP") used to prove that redaction
 # removes AWS-style keys. It was never a real credential. The test now builds fake keys at runtime.
 9ff9653d0ca0b1d66d998927127fe5d2cd616dac:tests/unit/safety.test.mjs:aws-access-token:11
+# Not a secret: the Supabase PUBLISHABLE key (sb_publishable_...). Supabase designs it to be
+# public; it ships to every visitor's browser, and Row Level Security protects the data.
+# Secret keys (sb_secret_... / service_role) must never be added here; build-config refuses them.
+bb26eb9ffdfc837aec66bf75ac574abca3c17dcd:scripts/build-config.mjs:generic-api-key:19
