@@ -65,6 +65,13 @@ function uwAuthMain() {
     auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true, flowType: "implicit" }
   });
 
+  /* Show "Continue with Google" only when Google sign-in is switched on in
+     Supabase, so visitors never land on a "provider is not enabled" error. */
+  fetch(`${cfg.url}/auth/v1/settings`, { headers: { apikey: cfg.anonKey } })
+    .then((r) => (r.ok ? r.json() : null))
+    .then((s) => { if (s && s.external && s.external.google) document.querySelectorAll("[data-google-block]").forEach((el) => (el.hidden = false)); })
+    .catch(() => {});
+
   /* ---------- Continue with Google ---------- */
   document.querySelectorAll("[data-google]").forEach((btn) => {
     btn.addEventListener("click", async () => {
@@ -126,12 +133,14 @@ function uwAuthMain() {
       if (!$("#terms").checked) { say(status, "Please tick the box to agree to the Terms of Service and Privacy Policy.", "error"); return; }
       const btn = $("button[type=submit]", form);
       busy(btn, true, "Creating your account…");
-      const { error } = await sb.auth.signUp({
+      const { data, error } = await sb.auth.signUp({
         email, password,
         options: { data: { full_name: name, terms_accepted_at: new Date().toISOString() }, emailRedirectTo: `${origin}/account` }
       });
       busy(btn, false);
       if (error) { say(status, friendly(error), "error"); return; }
+      // Email verification switched off in Supabase: the account is ready, go straight in.
+      if (data && data.session) { location.assign("/account"); return; }
       // Same message whether or not the address already had an account.
       form.hidden = true;
       const done = $("#signup-done");

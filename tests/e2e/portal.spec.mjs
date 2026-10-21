@@ -13,7 +13,7 @@ const ACCESS = () => jwt({ sub: USER.id, role: "authenticated", aud: "authentica
 const session = () => ({ access_token: ACCESS(), refresh_token: "r1", token_type: "bearer", expires_in: 3600, expires_at: now() + 3600, user: USER });
 const PROJECT = { client_name: "Dr A", project_name: "Clinic website", status: "Designing", notes: "Homepage draft sent.\n<b>not bold</b>", updated_at: "2026-10-15T09:00:00Z" };
 
-async function fakeSupabase(page, calls = []) {
+async function fakeSupabase(page, calls = [], { google = true, autoConfirm = false } = {}) {
   await page.route("**/js/supabase-config.js*", (r) =>
     r.fulfill({ contentType: "text/javascript", body: `window.SUPABASE_CONFIG = ${JSON.stringify({ url: SB, anonKey: ANON })};` }));
   await page.route(`${SB}/**`, async (route) => {
@@ -24,7 +24,8 @@ async function fakeSupabase(page, calls = []) {
     const CORS = { "access-control-allow-origin": "*", "access-control-allow-headers": "*", "access-control-allow-methods": "*", "access-control-expose-headers": "*" };
     const json = (status, data) => route.fulfill({ status, contentType: "application/json", headers: CORS, body: JSON.stringify(data) });
     if (req.method() === "OPTIONS") return route.fulfill({ status: 204, headers: CORS });
-    if (url.pathname === "/auth/v1/signup") return json(200, { ...USER, email: body.email, email_confirmed_at: null, user_metadata: body.data });
+    if (url.pathname === "/auth/v1/settings") return json(200, { external: { email: true, google } });
+    if (url.pathname === "/auth/v1/signup") return json(200, autoConfirm ? session() : { ...USER, email: body.email, email_confirmed_at: null, user_metadata: body.data });
     if (url.pathname === "/auth/v1/token" && url.searchParams.get("grant_type") === "password") {
       if (body.password === "wrong-password") return json(400, { code: "invalid_credentials", error_code: "invalid_credentials", msg: "Invalid login credentials" });
       if (body.email.startsWith("unverified")) return json(400, { code: "email_not_confirmed", error_code: "email_not_confirmed", msg: "Email not confirmed" });
@@ -203,4 +204,31 @@ test("an old cached empty config is replaced by a fresh one, so the forms work",
   await expect(page.locator("[data-auth-form] button[type=submit]")).toBeEnabled();
   await expect(page.locator("[data-portal-off]")).toBeHidden();
   expect(n).toBe(2);
+});
+
+test("Continue with Google stays hidden while Google sign-in is off in Supabase", async ({ page }) => {
+  await fakeSupabase(page, [], { google: false });
+  for (const path of ["/login", "/signup"]) {
+    await page.goto(path);
+    await expect(page.locator("[data-auth-form] button[type=submit]")).toBeEnabled();
+    await expect(page.locator("[data-google]")).toBeHidden();
+  }
+});
+
+test("Continue with Google appears when Google sign-in is on", async ({ page }) => {
+  await fakeSupabase(page);
+  await page.goto("/login");
+  await expect(page.locator("[data-google]")).toBeVisible();
+});
+
+test("with email verification switched off, sign-up goes straight to the account", async ({ page }) => {
+  await fakeSupabase(page, [], { autoConfirm: true });
+  await page.goto("/signup");
+  await page.fill("#full_name", "Dr A");
+  await page.fill("#email", "dr.a@example.com");
+  await page.fill("#password", "a-good-password");
+  await page.check("#terms");
+  await page.click("[data-auth-form] button[type=submit]");
+  await page.waitForURL("**/account");
+  await expect(page.locator("[data-project-name]")).toHaveText("Clinic website");
 });
