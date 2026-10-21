@@ -35,7 +35,7 @@ function uwAuthMain() {
   // whether an email address has an account.
   function friendly(err) {
     const msg = String((err && (err.code || err.message)) || "").toLowerCase();
-    if (msg.includes("email_not_confirmed") || msg.includes("not confirmed")) return "Please verify your email first. Check your inbox for the link I sent you.";
+    if (msg.includes("email_not_confirmed") || msg.includes("not confirmed")) return "Please verify your email first: type the code from the email I sent you.";
     if (msg.includes("invalid_credentials") || msg.includes("invalid login")) return "That email and password don't match. Check them and try again, or reset your password.";
     if (msg.includes("weak_password") || msg.includes("at least") || msg.includes("password should")) return "Please choose a stronger password: at least 8 characters.";
     if (msg.includes("same_password") || msg.includes("different from the old")) return "Your new password must be different from your old one.";
@@ -82,6 +82,38 @@ function uwAuthMain() {
   });
 
   /* ---------- Sign up ---------- */
+  /* ---------- Verify the email with the code from the email (no link needed) ---------- */
+  function wireVerify(form, getEmail) {
+    if (!form) return;
+    const status = $(".form-status", form);
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = getEmail();
+      const code = form.code.value.replace(/\s+/g, "");
+      if (!email) { say(status, "Type your email address above first.", "error"); return; }
+      if (!/^\d{6,10}$/.test(code)) { say(status, "Please type the code from the email (numbers only).", "error"); return; }
+      const btn = $("button[type=submit]", form);
+      busy(btn, true, "Checking…");
+      const { error } = await sb.auth.verifyOtp({ email, token: code, type: "email" });
+      busy(btn, false);
+      if (error) {
+        const tooMany = /rate|too many/i.test(String(error.code || error.message));
+        say(status, tooMany ? friendly(error) : "That code is wrong or has expired. Check it, or tap \"Send a new code\".", "error");
+        return;
+      }
+      location.assign("/account");
+    });
+    const again = $("[data-resend-code]", form);
+    if (again) again.addEventListener("click", async () => {
+      const email = getEmail();
+      if (!email) { say(status, "Type your email address above first.", "error"); return; }
+      busy(again, true, "Sending…");
+      const { error } = await sb.auth.resend({ type: "signup", email, options: { emailRedirectTo: `${origin}/account` } });
+      busy(again, false);
+      say(status, error ? friendly(error) : "A new code is on its way. Check your inbox (and spam folder).", error ? "error" : "ok");
+    });
+  }
+
   if (page === "signup") {
     const form = $("[data-auth-form]");
     const status = $(".form-status", form);
@@ -107,13 +139,13 @@ function uwAuthMain() {
       done.hidden = false;
       done.focus();
     });
+    wireVerify($("#signup-done [data-verify-form]"), () => form.email.value.trim());
   }
 
   /* ---------- Log in ---------- */
   if (page === "login") {
     const form = $("[data-auth-form]");
     const status = $(".form-status", form);
-    const resend = $("[data-resend]");
     const params = new URLSearchParams(location.search);
     if (params.has("reset")) say(status, "Your password has been changed. Log in with your new password.", "ok");
     if (params.has("loggedout")) say(status, "You've been logged out.", "ok");
@@ -129,22 +161,14 @@ function uwAuthMain() {
       busy(btn, false);
       if (error) {
         say(status, friendly(error), "error");
-        if (resend) resend.hidden = !/confirm/i.test(String(error.code || error.message));
+        const box = $("#login-verify");
+        if (box && /confirm/i.test(String(error.code || error.message))) { box.hidden = false; $("#code", box).focus(); }
         return;
       }
       location.assign("/account");
     });
 
-    if (resend) {
-      resend.addEventListener("click", async () => {
-        const email = form.email.value.trim();
-        if (!email) { say(status, "Type your email address above first.", "error"); return; }
-        busy(resend, true, "Sending…");
-        const { error } = await sb.auth.resend({ type: "signup", email, options: { emailRedirectTo: `${origin}/account` } });
-        busy(resend, false);
-        say(status, error ? friendly(error) : "If that address is waiting for verification, a new link is on its way.", error ? "error" : "ok");
-      });
-    }
+    wireVerify($("#login-verify [data-verify-form]"), () => form.email.value.trim());
   }
 
   /* ---------- Forgot password ---------- */

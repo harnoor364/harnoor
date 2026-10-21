@@ -36,6 +36,10 @@ async function fakeSupabase(page, calls = []) {
     if (url.pathname === "/auth/v1/logout") return route.fulfill({ status: 204, headers: CORS });
     if (url.pathname === "/auth/v1/recover") return json(200, {});
     if (url.pathname === "/auth/v1/resend") return json(200, {});
+    if (url.pathname === "/auth/v1/verify") {
+      if (body && body.token === "123456" && body.email) return json(200, session());
+      return json(403, { code: "otp_expired", error_code: "otp_expired", msg: "Token has expired or is invalid" });
+    }
     if (url.pathname === "/rest/v1/client_projects") {
       const single = /vnd\.pgrst\.object/.test(req.headers()["accept"] || "");
       return json(200, single ? PROJECT : [PROJECT]);
@@ -73,7 +77,7 @@ test("sign up requires the terms box, then asks to verify email", async ({ page 
   await page.click("[data-auth-form] button[type=submit]");
   expect(calls.some((c) => c.path === "/auth/v1/signup")).toBe(false);          // blocked without consent
   await page.click("[data-google]");
-  await expect(page.locator(".form-status")).toContainText("Terms of Service");
+  await expect(page.locator("[data-auth-form] .form-status")).toContainText("Terms of Service");
   await page.check("#terms");
   await page.click("[data-auth-form] button[type=submit]");
   await expect(page.locator("#signup-done")).toBeVisible();
@@ -83,22 +87,49 @@ test("sign up requires the terms box, then asks to verify email", async ({ page 
   expect(signup.body.data.terms_accepted_at).toBeTruthy();
 });
 
-test("login errors are plain English; unverified email offers a new link", async ({ page }) => {
+test("login errors are plain English; unverified email can be verified with the code", async ({ page }) => {
   const calls = [];
   await fakeSupabase(page, calls);
   await page.goto("/login");
   await page.fill("#email", "dr.a@example.com");
   await page.fill("#password", "wrong-password");
   await page.click("[data-auth-form] button[type=submit]");
-  await expect(page.locator(".form-status")).toContainText("don't match");
-  await expect(page.locator("[data-resend]")).toBeHidden();
+  await expect(page.locator("[data-auth-form] .form-status")).toContainText("don't match");
+  await expect(page.locator("#login-verify")).toBeHidden();
   await page.fill("#email", "unverified@example.com");
   await page.fill("#password", "a-good-password");
   await page.click("[data-auth-form] button[type=submit]");
-  await expect(page.locator(".form-status")).toContainText("verify your email");
-  await page.click("[data-resend]");
-  await expect(page.locator(".form-status")).toContainText("new link");
+  await expect(page.locator("[data-auth-form] .form-status")).toContainText("verify your email");
+  await expect(page.locator("#login-verify")).toBeVisible();
+  await page.click("#login-verify [data-resend-code]");
+  await expect(page.locator("#login-verify .form-status")).toContainText("new code");
   expect(calls.some((c) => c.path === "/auth/v1/resend")).toBe(true);
+  await page.fill("#code", "123456");
+  await page.click("#login-verify button[type=submit]");
+  await page.waitForURL("**/account");
+  const v = calls.find((c) => c.path === "/auth/v1/verify");
+  expect(v.body).toMatchObject({ email: "unverified@example.com", token: "123456", type: "email" });
+});
+
+test("after sign-up, the emailed code verifies the account on the website", async ({ page }) => {
+  await fakeSupabase(page);
+  await page.goto("/signup");
+  await page.fill("#full_name", "Dr A");
+  await page.fill("#email", "dr.a@example.com");
+  await page.fill("#password", "a-good-password");
+  await page.check("#terms");
+  await page.click("[data-auth-form] button[type=submit]");
+  await expect(page.locator("#signup-done")).toBeVisible();
+  await page.fill("#code", "12ab");
+  await page.click("#signup-done button[type=submit]");
+  await expect(page.locator("#signup-done .form-status")).toContainText("numbers only");
+  await page.fill("#code", "999999");
+  await page.click("#signup-done button[type=submit]");
+  await expect(page.locator("#signup-done .form-status")).toContainText("wrong or has expired");
+  await page.fill("#code", "123 456");
+  await page.click("#signup-done button[type=submit]");
+  await page.waitForURL("**/account");
+  await expect(page.locator("[data-project-name]")).toHaveText("Clinic website");
 });
 
 test("log in → account shows the project → log out", async ({ page }) => {
@@ -133,7 +164,7 @@ test("forgot password never reveals whether an account exists", async ({ page })
   await page.goto("/forgot-password");
   await page.fill("#email", "someone@example.com");
   await page.click("[data-auth-form] button[type=submit]");
-  await expect(page.locator(".form-status")).toContainText("If there's an account");
+  await expect(page.locator("[data-auth-form] .form-status")).toContainText("If there's an account");
   const rec = calls.find((c) => c.path === "/auth/v1/recover");
   expect(rec.query).toContain("redirect_to=");
 });
@@ -146,11 +177,11 @@ test("reset password from the email link", async ({ page }) => {
   await page.fill("#password", "new-password-1");
   await page.fill("#confirm", "new-password-2");
   await page.click("[data-auth-form] button[type=submit]");
-  await expect(page.locator(".form-status")).toContainText("don't match");
+  await expect(page.locator("[data-auth-form] .form-status")).toContainText("don't match");
   await page.fill("#confirm", "new-password-1");
   await page.click("[data-auth-form] button[type=submit]");
   await page.waitForURL("**/login?reset=1");
-  await expect(page.locator(".form-status")).toContainText("password has been changed");
+  await expect(page.locator("[data-auth-form] .form-status")).toContainText("password has been changed");
   expect(calls.some((c) => c.path === "/auth/v1/user" && c.method === "PUT")).toBe(true);
 });
 
