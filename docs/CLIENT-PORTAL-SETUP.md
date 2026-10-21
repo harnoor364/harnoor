@@ -1,7 +1,7 @@
 # Client portal setup (Supabase + Netlify)
 
 The login pages (`/signup`, `/login`, `/forgot-password`, `/reset-password`, `/account`) are
-already built. Until you finish these steps they show "The client login isn't switched on yet".
+already built. Until you finish these steps they show "The login didn't load properly. Please refresh the page…".
 Allow about 30–40 minutes. Do the steps in order.
 
 > **Two keys, one rule.** Supabase gives you a public **anon** key and a secret
