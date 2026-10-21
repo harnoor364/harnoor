@@ -14,7 +14,7 @@ const session = () => ({ access_token: ACCESS(), refresh_token: "r1", token_type
 const PROJECT = { client_name: "Dr A", project_name: "Clinic website", status: "Designing", notes: "Homepage draft sent.\n<b>not bold</b>", updated_at: "2026-10-15T09:00:00Z" };
 
 async function fakeSupabase(page, calls = []) {
-  await page.route("**/js/supabase-config.js", (r) =>
+  await page.route("**/js/supabase-config.js*", (r) =>
     r.fulfill({ contentType: "text/javascript", body: `window.SUPABASE_CONFIG = ${JSON.stringify({ url: SB, anonKey: ANON })};` }));
   await page.route(`${SB}/**`, async (route) => {
     const req = route.request();
