@@ -43,7 +43,7 @@
   <script src="js/consent.js" defer></script>
   <script src="js/supabase-config.js?v=4" defer></script>
   <script src="js/vendor/supabase-2.116.0.js" defer></script>
-  <script src="js/auth.js?v=3" defer></script>
+  <script src="js/auth.js?v=4" defer></script>
 </head>
 <body data-page="signup">
   <a class="skip-link" href="#main">Skip to content</a>
@@ -114,8 +114,18 @@
           </form>
           <div id="signup-done" tabindex="-1" hidden>
             <h2>Check your email</h2>
-            <p>I've sent a verification link to <strong data-email></strong>. Open it on this device to finish setting up your account. The link expires after a while, so don't leave it too long.</p>
-            <p class="auth-small">Nothing arrived after a few minutes? Check your spam folder, or <a href="/login">log in</a> and ask for a new link.</p>
+            <p>I've sent a verification code to <strong data-email></strong>. Type it below to finish setting up your account.</p>
+            <form data-verify-form novalidate>
+              <div class="field">
+                <label for="code">Verification code</label>
+                <input id="code" name="code" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="10" required aria-describedby="code-hint">
+                <p class="field-hint" id="code-hint">The number in the email I sent you.</p>
+              </div>
+              <div class="form-submit"><button class="btn btn-primary btn-lg btn-block" type="submit">Verify and continue</button></div>
+              <p class="form-status" role="alert" aria-live="polite"></p>
+              <button class="btn btn-outline btn-sm" type="button" data-resend-code>Send a new code</button>
+            </form>
+            <p class="auth-small">Nothing arrived after a few minutes? Check your spam folder, then tap "Send a new code". The email also has a link, which works too.</p>
           </div>
           <p class="auth-foot">Already have an account? <a href="/login">Log in</a></p>
         </div>

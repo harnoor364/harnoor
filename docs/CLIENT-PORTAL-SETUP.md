@@ -40,6 +40,24 @@ Left menu → **Authentication**:
    Supabase's own address; for real clients, connect your own email under **Emails → SMTP Settings**
    (e.g. a free Brevo or Zoho Mail account).
 
+### 3b. Put the 6-digit code in the verification email (needed)
+
+Clients verify their email by typing a code on the website (after signing up, or on the
+login page). Supabase only includes that code if the email template asks for it.
+
+Supabase → **Authentication → Emails → Confirm signup** → replace the message body with:
+
+```html
+<h2>Confirm your email</h2>
+<p>Hi, thanks for signing up with Upward Web by Harnoor Singh.</p>
+<p>Your verification code is:</p>
+<p style="font-size:28px;font-weight:bold;letter-spacing:4px">{{ .Token }}</p>
+<p>Type it on the website to finish setting up your account.</p>
+<p>Or <a href="{{ .ConfirmationURL }}">click here to confirm instead</a>.</p>
+```
+
+Subject: `Your Upward Web verification code`. Click **Save**.
+
 ## 4. "Continue with Google"
 
 1. Go to <https://console.cloud.google.com>, create a project called `Upward Web`.
