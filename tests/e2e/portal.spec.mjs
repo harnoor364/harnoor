@@ -159,3 +159,17 @@ test("an expired reset link says so", async ({ page }) => {
   await page.goto("/reset-password");
   await expect(page.locator("[data-link-invalid]")).toBeVisible({ timeout: 4000 });
 });
+
+test("an old cached empty config is replaced by a fresh one, so the forms work", async ({ page }) => {
+  await fakeSupabase(page);
+  let n = 0;
+  await page.route("**/js/supabase-config.js*", (r) => {
+    n += 1;
+    const cfg = n === 1 ? { url: "", anonKey: "" } : { url: SB, anonKey: ANON };   // 1st = stale cached copy
+    return r.fulfill({ contentType: "text/javascript", body: `window.SUPABASE_CONFIG = ${JSON.stringify(cfg)};` });
+  });
+  await page.goto("/login");
+  await expect(page.locator("[data-auth-form] button[type=submit]")).toBeEnabled();
+  await expect(page.locator("[data-portal-off]")).toBeHidden();
+  expect(n).toBe(2);
+});

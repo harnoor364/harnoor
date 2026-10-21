@@ -4,7 +4,7 @@
    Config comes from js/supabase-config.js (written at build time).
    All text from the server is inserted with textContent, never as HTML.
    ===================================================================== */
-(function () {
+function uwAuthMain() {
   "use strict";
 
   const $ = (sel, root = document) => root.querySelector(sel);
@@ -234,4 +234,16 @@
       location.assign("/login?loggedout=1");
     });
   }
+}
+
+/* If the login settings look empty, the browser may be holding an old saved
+   copy of js/supabase-config.js. Fetch a fresh copy once before giving up. */
+(function boot() {
+  "use strict";
+  const c = window.SUPABASE_CONFIG || {};
+  if (c.url && c.anonKey) return uwAuthMain();
+  const s = document.createElement("script");
+  s.src = `js/supabase-config.js?fresh=${Date.now()}`;
+  s.onload = s.onerror = () => uwAuthMain();
+  document.head.appendChild(s);
 })();
