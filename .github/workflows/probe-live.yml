@@ -1,0 +1,18 @@
+# Temporary diagnostic: reads the LIVE login/signup HTML (GET only).
+name: Probe live portal
+on:
+  push:
+    branches: [probe-live]
+permissions:
+  contents: read
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Live HTML
+        run: |
+          sleep 90
+          for u in /login /signup; do
+            echo "=== $u"; curl -sS "https://harnoorsingh.in$u" -o body.txt -D - | grep -i -E "^HTTP|^age"
+            grep -o -E 'auth.js[^"]*|supabase-config.js[^"]*|Continue with Google|Verification code' body.txt | sort | uniq -c
+          done
