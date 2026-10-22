@@ -54,7 +54,7 @@ function uwAuthMain() {
   /* ---------- Not configured yet ---------- */
   const configured = cfg.url && cfg.anonKey && window.supabase && typeof window.supabase.createClient === "function";
   if (!configured) {
-    document.querySelectorAll("[data-auth-form] button[type=submit], [data-google]").forEach((b) => (b.disabled = true));
+    document.querySelectorAll("[data-auth-form] button[type=submit]").forEach((b) => (b.disabled = true));
     const box = $("[data-portal-off]");
     if (box) box.hidden = false;
     if (page === "account") { const loading = $("[data-account-loading]"); if (loading) loading.hidden = true; }
@@ -63,29 +63,6 @@ function uwAuthMain() {
 
   const sb = window.supabase.createClient(cfg.url, cfg.anonKey, {
     auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true, flowType: "implicit" }
-  });
-
-  /* Show "Continue with Google" only when Google sign-in is switched on in
-     Supabase, so visitors never land on a "provider is not enabled" error. */
-  fetch(`${cfg.url}/auth/v1/settings`, { headers: { apikey: cfg.anonKey } })
-    .then((r) => (r.ok ? r.json() : null))
-    .then((s) => { if (s && s.external && s.external.google) document.querySelectorAll("[data-google-block]").forEach((el) => (el.hidden = false)); })
-    .catch(() => {});
-
-  /* ---------- Continue with Google ---------- */
-  document.querySelectorAll("[data-google]").forEach((btn) => {
-    btn.addEventListener("click", async () => {
-      const status = $(".form-status", btn.closest("[data-auth-card]") || document);
-      const terms = $("#terms");
-      if (terms && !terms.checked) {
-        say(status, "Please tick the box to agree to the Terms of Service and Privacy Policy first.", "error");
-        terms.focus();
-        return;
-      }
-      busy(btn, true, "Opening Google…");
-      const { error } = await sb.auth.signInWithOAuth({ provider: "google", options: { redirectTo: `${origin}/account` } });
-      if (error) { busy(btn, false); say(status, friendly(error), "error"); }
-    });
   });
 
   /* ---------- Sign up ---------- */
@@ -258,7 +235,7 @@ function uwAuthMain() {
     sb.auth.onAuthStateChange((event, session) => { if (session && !shown) { shown = true; show(session); } });
     sb.auth.getSession().then(({ data }) => {
       if (data.session) { if (!shown) { shown = true; show(data.session); } }
-      // Give an email-verification or Google redirect a moment to finish signing in.
+      // Give an email-verification redirect a moment to finish signing in.
       else setTimeout(() => { if (!shown) location.replace("/login"); }, 1200);
     });
     $("[data-logout]").addEventListener("click", async (e) => {
