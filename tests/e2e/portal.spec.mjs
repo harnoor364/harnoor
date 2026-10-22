@@ -13,7 +13,7 @@ const ACCESS = () => jwt({ sub: USER.id, role: "authenticated", aud: "authentica
 const session = () => ({ access_token: ACCESS(), refresh_token: "r1", token_type: "bearer", expires_in: 3600, expires_at: now() + 3600, user: USER });
 const PROJECT = { client_name: "Dr A", project_name: "Clinic website", status: "Designing", notes: "Homepage draft sent.\n<b>not bold</b>", updated_at: "2026-10-15T09:00:00Z" };
 
-async function fakeSupabase(page, calls = [], { google = true, autoConfirm = false } = {}) {
+async function fakeSupabase(page, calls = [], { autoConfirm = false } = {}) {
   await page.route("**/js/supabase-config.js*", (r) =>
     r.fulfill({ contentType: "text/javascript", body: `window.SUPABASE_CONFIG = ${JSON.stringify({ url: SB, anonKey: ANON })};` }));
   await page.route(`${SB}/**`, async (route) => {
@@ -24,7 +24,6 @@ async function fakeSupabase(page, calls = [], { google = true, autoConfirm = fal
     const CORS = { "access-control-allow-origin": "*", "access-control-allow-headers": "*", "access-control-allow-methods": "*", "access-control-expose-headers": "*" };
     const json = (status, data) => route.fulfill({ status, contentType: "application/json", headers: CORS, body: JSON.stringify(data) });
     if (req.method() === "OPTIONS") return route.fulfill({ status: 204, headers: CORS });
-    if (url.pathname === "/auth/v1/settings") return json(200, { external: { email: true, google } });
     if (url.pathname === "/auth/v1/signup") return json(200, autoConfirm ? session() : { ...USER, email: body.email, email_confirmed_at: null, user_metadata: body.data });
     if (url.pathname === "/auth/v1/token" && url.searchParams.get("grant_type") === "password") {
       if (body.password === "wrong-password") return json(400, { code: "invalid_credentials", error_code: "invalid_credentials", msg: "Invalid login credentials" });
@@ -77,8 +76,7 @@ test("sign up requires the terms box, then asks to verify email", async ({ page 
   await page.fill("#password", "a-good-password");
   await page.click("[data-auth-form] button[type=submit]");
   expect(calls.some((c) => c.path === "/auth/v1/signup")).toBe(false);          // blocked without consent
-  await page.click("[data-google]");
-  await expect(page.locator("[data-auth-form] .form-status")).toContainText("Terms of Service");
+  expect(await page.locator("#terms").evaluate((el) => el.validity.valueMissing)).toBe(true);   // browser asks for the box
   await page.check("#terms");
   await page.click("[data-auth-form] button[type=submit]");
   await expect(page.locator("#signup-done")).toBeVisible();
@@ -206,19 +204,13 @@ test("an old cached empty config is replaced by a fresh one, so the forms work",
   expect(n).toBe(2);
 });
 
-test("Continue with Google stays hidden while Google sign-in is off in Supabase", async ({ page }) => {
-  await fakeSupabase(page, [], { google: false });
+test("there is no Continue with Google button on the login and sign-up pages", async ({ page }) => {
+  await fakeSupabase(page);
   for (const path of ["/login", "/signup"]) {
     await page.goto(path);
     await expect(page.locator("[data-auth-form] button[type=submit]")).toBeEnabled();
-    await expect(page.locator("[data-google]")).toBeHidden();
+    await expect(page.getByText("Continue with Google")).toHaveCount(0);
   }
-});
-
-test("Continue with Google appears when Google sign-in is on", async ({ page }) => {
-  await fakeSupabase(page);
-  await page.goto("/login");
-  await expect(page.locator("[data-google]")).toBeVisible();
 });
 
 test("with email verification switched off, sign-up goes straight to the account", async ({ page }) => {
