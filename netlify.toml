@@ -1,6 +1,8 @@
 # Netlify settings. The build steps write js/supabase-config.js from the
 # SUPABASE_URL / SUPABASE_ANON_KEY environment variables (see docs/CLIENT-PORTAL-SETUP.md)
 # and regenerate sitemap.xml from the public pages (scripts/build-sitemap.mjs).
+# Cloudflare Pages uses the [[headers]] below too: scripts/build-cloudflare.mjs copies them into
+# dist/_headers (see docs/CLOUDFLARE-PAGES.md). The [[redirects]] are only needed on Netlify.
 [build]
   publish = "."
   command = "node scripts/build-config.mjs && node scripts/build-sitemap.mjs"
