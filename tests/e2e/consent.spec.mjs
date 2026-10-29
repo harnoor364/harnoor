@@ -83,17 +83,28 @@ test.describe("with Secure Privacy and Google stubbed", () => {
     expect(await events(page, "whatsapp_click")).toHaveLength(2);
   });
   
-  test("a click on a phone link sends call_click", async ({ page }) => {
+  test("the Call links (contact list and every footer) send call_click", async ({ page }) => {
     await page.goto("/contact");
     await stopNavigation(page);
-    await page.evaluate(() => { const a = document.createElement("a"); a.href = "tel:+917973353244"; a.id = "t-tel"; a.innerHTML = "<span>Call</span>"; document.body.append(a); });
-    await page.click("#t-tel span");
+    await page.click('.contact-list a[href="tel:+917973353244"]');
+    await page.click('.site-footer a[href="tel:+917973353244"] span');
     const ev = await events(page, "call_click");
-    expect(ev).toHaveLength(1);
+    expect(ev).toHaveLength(2);
     expect(ev[0][2]).toMatchObject({ page_path: "/contact" });
     expect(await events(page, "whatsapp_click")).toHaveLength(0);
   });
-  
+
+  test("every page's footer has one Call link with the full number on one line", async ({ page }) => {
+    for (const path of ["/", "/pricing", "/doctors", "/login", "/cookie-policy", "/404.html"]) {
+      await page.goto(path);
+      const call = page.locator('.site-footer a[href="tel:+917973353244"]');
+      await expect(call).toHaveCount(1);
+      await expect(call).toHaveText(/^Call: \+91\s79733\s53244$/);
+      const lines = await call.locator("span").evaluate((el) => el.getClientRects().length);
+      expect(lines).toBe(1);
+    }
+  });
+
   test("a successful contact form submission sends generate_lead (a failed one does not)", async ({ page }) => {
     let ok = false;
     await page.route("**/", (r) => (r.request().method() === "POST"
