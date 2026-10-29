@@ -18,6 +18,6 @@
   "devDependencies": {
     "@anthropic-ai/sdk": "0.134.0",
     "@playwright/test": "1.56.1",
-    "html-validate": "11.16.2"
+    "html-validate": "11.17.0"
   }
 }
