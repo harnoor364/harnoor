@@ -1,15 +1,12 @@
 /* =====================================================================
    GOOGLE ANALYTICS 4 (gtag.js) with Google Consent Mode v2.
-   Loaded first in <head> on every page, before the Google tag itself.
+   Loaded in <head> on every page, after Secure Privacy and before the Google tag.
 
    - Default consent: everything "denied". GA then sets no cookies and
      stores no identifiers.
-   - A returning visitor who already accepted Analytics (saved by
-     js/consent.js as "uw_consent", kept about 6 months) is switched to
-     "granted" straight away, so they are counted without the banner.
-     Visitors who declined stay "denied".
-   - Accepting in the banner later calls gtag('consent','update', …) from
-     js/consent.js.
+   - Consent updates (and remembering each visitor's choice) come from
+     Secure Privacy, whose script loads first in <head>. This file never
+     grants consent itself.
    - Events: whatsapp_click (links to wa.me / api.whatsapp.com),
      call_click (tel: links), generate_lead (sent by js/main.js after a
      successful contact form submission). Each carries page_path.
@@ -20,9 +17,6 @@
   "use strict";
 
   var ID = "G-3D4ERRL2NK";
-  var CONSENT_KEY = "uw_consent";
-  var CONSENT_VERSION = 1;
-  var MAX_AGE_MS = 182 * 24 * 60 * 60 * 1000; // same 6 months as js/consent.js
 
   window.dataLayer = window.dataLayer || [];
   function gtag() { window.dataLayer.push(arguments); }
@@ -37,19 +31,11 @@
     wait_for_update: 500
   });
 
-  // 2. Returning visitor: reuse the saved choice.
-  try {
-    var c = JSON.parse(localStorage.getItem(CONSENT_KEY) || "null");
-    if (c && c.v === CONSENT_VERSION && c.ts && Date.now() - c.ts <= MAX_AGE_MS && c.analytics) {
-      gtag("consent", "update", { analytics_storage: "granted" });
-    }
-  } catch (e) { /* storage blocked: stay denied */ }
-
-  // 3. The Google tag.
+  // 2. The Google tag. (Secure Privacy sends gtag("consent", "update", …) itself.)
   gtag("js", new Date());
   gtag("config", ID, { page_location: location.origin + location.pathname + location.search });
 
-  // 4. Click tracking for WhatsApp and phone links (works for links added later too).
+  // 3. Click tracking for WhatsApp and phone links (works for links added later too).
   function track(name, params) {
     var p = { page_path: location.pathname };
     for (var k in params || {}) p[k] = params[k];

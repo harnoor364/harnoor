@@ -53,10 +53,11 @@ for (const f of pages) {
   const html = read(f);
   const inline = [...html.matchAll(/<script(?![^>]*\bsrc=)(?![^>]*type="application\/ld\+json")[^>]*>/g)];
   check(`no-inline-script:${f}`, inline.length === 0, `${f}: inline <script> blocks would be blocked by the CSP`, "high");
-  // The only allowed outside script is the official Google Analytics (GA4) tag.
+  // The only allowed outside scripts: the official Google Analytics (GA4) tag and the Secure Privacy consent script.
   const ext = [...html.matchAll(/<script[^>]*\bsrc="((?:https?:)?\/\/[^"]*)"/g)]
-    .filter((m) => !/^https:\/\/www\.googletagmanager\.com\/gtag\/js\?id=G-[A-Z0-9]+$/.test(m[1]));
-  check(`no-third-party-script:${f}`, ext.length === 0, `${f}: third-party scripts are not allowed (only the GA4 Google tag is)`, "high");
+    .filter((m) => !/^https:\/\/www\.googletagmanager\.com\/gtag\/js\?id=G-[A-Z0-9]+$/.test(m[1]))
+    .filter((m) => !/^https:\/\/app\.secureprivacy\.ai\/script\/[a-f0-9]{24}\.js$/.test(m[1]));
+  check(`no-third-party-script:${f}`, ext.length === 0, `${f}: third-party scripts are not allowed (only the GA4 tag and Secure Privacy are)`, "high");
   check(`no-inline-handlers:${f}`, !/\son[a-z]+="/i.test(html), `${f}: inline event handlers (onclick=...) are not allowed`, "high");
 }
 
