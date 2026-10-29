@@ -1,29 +1,46 @@
-/* Cookie consent: nothing optional before a choice, rejection blocks analytics,
-   preferences work by keyboard, the choice persists and expires, and the banner
-   never covers the WhatsApp button or the hero call-to-action on phones. */
+/* Cookie consent + Google Analytics (GA4, Consent Mode v2):
+   the tag is on every page with all consent "denied" by default, no analytics
+   cookies before a choice, rejection keeps it denied, accepting grants
+   analytics_storage only, the choice is remembered for returning visitors,
+   preferences work by keyboard, and the banner never covers the WhatsApp
+   button or the hero call-to-action on phones. */
 import { test, expect } from "@playwright/test";
 import fs from "node:fs";
 
-// Pretend a GA4 ID is configured, so we can prove it is (or isn't) loaded.
-async function withAnalyticsId(page) {
-  await page.route("**/js/data.js", async (route) => {
-    const res = await route.fetch();
-    const body = (await res.text()).replace('analyticsId: ""', 'analyticsId: "G-TEST12345"');
-    await route.fulfill({ response: res, body });
-  });
+// Never contact Google from tests: answer the tag and hits with empty responses.
+async function stubGoogle(page) {
+  await page.route(/https:\/\/([a-z0-9-]+\.)*(googletagmanager|google-analytics|analytics\.google)\.com\//, (r) =>
+    r.fulfill({ status: 200, contentType: "text/javascript", body: "" }));
 }
-const gaTags = (page) => page.locator('script[src*="googletagmanager.com/gtag/js"]').count();
-const stored = (page) => page.evaluate(() => JSON.parse(localStorage.getItem("uw_consent") || "null"));
+test.beforeEach(async ({ page }) => { await stubGoogle(page); });
 
-test("first visit: banner shows, nothing optional is loaded or stored", async ({ page }) => {
-  await withAnalyticsId(page);
+const gaTags = (page) => page.locator('head script[src^="https://www.googletagmanager.com/gtag/js?id=G-3D4ERRL2NK"]').count();
+const stored = (page) => page.evaluate(() => JSON.parse(localStorage.getItem("uw_consent") || "null"));
+// dataLayer entries are `arguments` objects: turn them into plain arrays
+const layer = (page) => page.evaluate(() => (window.dataLayer || []).map((a) => Array.from(a).map((x) => (x instanceof Date ? "date" : x))));
+const consentCalls = async (page) => (await layer(page)).filter((a) => a[0] === "consent");
+const events = async (page, name) => (await layer(page)).filter((a) => a[0] === "event" && a[1] === name);
+const gaCookies = async (page) => (await page.context().cookies()).filter((c) => c.name.startsWith("_ga"));
+const DENIED = { analytics_storage: "denied", ad_storage: "denied", ad_user_data: "denied", ad_personalization: "denied" };
+
+test("first visit: tag is in the head with every consent signal denied; banner shows; nothing stored", async ({ page }) => {
   await page.goto("/");
   const banner = page.locator(".consent-banner");
   await expect(banner).toBeVisible();
   await expect(banner.locator("button")).toHaveText(["Accept all", "Reject non-essential", "Customise"]);
-  expect(await gaTags(page)).toBe(0);
+  expect(await gaTags(page)).toBe(1);
+  // the consent defaults run before the Google tag script in <head>
+  const order = await page.evaluate(() => Array.from(document.head.querySelectorAll("script[src]")).map((s) => s.getAttribute("src")).slice(0, 2));
+  expect(order).toEqual(["/js/analytics.js", "https://www.googletagmanager.com/gtag/js?id=G-3D4ERRL2NK"]);
+  const consent = await consentCalls(page);
+  expect(consent[0][1]).toBe("default");
+  expect(consent[0][2]).toMatchObject(DENIED);
+  expect(consent.some((c) => JSON.stringify(c).includes("granted"))).toBe(false);
+  const cfg = (await layer(page)).find((a) => a[0] === "config");
+  expect(cfg[1]).toBe("G-3D4ERRL2NK");
+  expect(cfg[2].page_location).toBe(new URL(page.url()).origin + "/");
   expect(await stored(page)).toBeNull();
-  expect(await page.evaluate(() => typeof window.gtag)).toBe("undefined");
+  expect(await gaCookies(page)).toEqual([]);
 });
 
 test("the three banner buttons carry equal visual weight", async ({ page }) => {
@@ -39,35 +56,41 @@ test("the three banner buttons carry equal visual weight", async ({ page }) => {
   }
 });
 
-test("Reject non-essential blocks analytics, now and after reload", async ({ page }) => {
-  await withAnalyticsId(page);
+test("Reject non-essential keeps analytics denied, now and after reload", async ({ page }) => {
   await page.goto("/");
   await page.click(".consent-banner >> text=Reject non-essential");
   await expect(page.locator(".consent-banner")).toHaveCount(0);
   expect(await stored(page)).toMatchObject({ v: 1, essential: true, analytics: false, marketing: false });
-  expect(await gaTags(page)).toBe(0);
+  const last = (await consentCalls(page)).pop();
+  expect(last[1]).toBe("update");
+  expect(last[2]).toMatchObject(DENIED);
   await page.reload();
   await expect(page.locator(".consent-banner")).toHaveCount(0);
-  expect(await gaTags(page)).toBe(0);
+  expect((await consentCalls(page)).some((c) => JSON.stringify(c).includes("granted"))).toBe(false);
+  expect(await gaCookies(page)).toEqual([]);
 });
 
-test("Accept all loads analytics with Consent Mode v2 (defaults denied, then granted)", async ({ page }) => {
-  await withAnalyticsId(page);
-  await page.route("https://www.googletagmanager.com/**", (r) => r.fulfill({ contentType: "text/javascript", body: "" }));
+test("Accept all grants analytics_storage only (ads stay denied)", async ({ page }) => {
   await page.goto("/");
-  expect(await gaTags(page)).toBe(0);
   await page.click(".consent-banner >> text=Accept all");
-  expect(await gaTags(page)).toBe(1);
-  const consent = await page.evaluate(() => window.dataLayer.filter((a) => a[0] === "consent").map((a) => [a[1], a[2]]));
-  expect(consent[0][0]).toBe("default");
-  expect(consent[0][1].analytics_storage).toBe("denied");
-  expect(consent[1][0]).toBe("update");
-  expect(consent[1][1].analytics_storage).toBe("granted");
+  const last = (await consentCalls(page)).pop();
+  expect(last[1]).toBe("update");
+  expect(last[2]).toMatchObject({ analytics_storage: "granted", ad_storage: "denied", ad_user_data: "denied", ad_personalization: "denied" });
+});
+
+test("returning visitor who accepted: granted before the tag config, no banner", async ({ page }) => {
+  await page.goto("/");
+  await page.click(".consent-banner >> text=Accept all");
+  await page.goto("/pricing");
+  await expect(page.locator(".consent-banner")).toHaveCount(0);
+  const l = await layer(page);
+  const granted = l.findIndex((a) => a[0] === "consent" && a[1] === "update" && a[2].analytics_storage === "granted");
+  const config = l.findIndex((a) => a[0] === "config");
+  expect(granted).toBeGreaterThan(0);          // after the "default" call…
+  expect(granted).toBeLessThan(config);         // …and before the tag is configured
 });
 
 test("Customise works with the keyboard; Esc changes nothing; saving analytics only", async ({ page }) => {
-  await withAnalyticsId(page);
-  await page.route("https://www.googletagmanager.com/**", (r) => r.fulfill({ contentType: "text/javascript", body: "" }));
   await page.goto("/");
   // The banner is the first thing after "Skip to content"
   await page.keyboard.press("Tab");
@@ -88,8 +111,7 @@ test("Customise works with the keyboard; Esc changes nothing; saving analytics o
   await page.keyboard.press("Space");
   await page.click("dialog.consent-dialog >> text=Save my choices");
   expect(await stored(page)).toMatchObject({ analytics: true, marketing: false });
-  expect(await gaTags(page)).toBe(1);
-  const update = await page.evaluate(() => window.dataLayer.filter((a) => a[0] === "consent" && a[1] === "update").pop()[2]);
+  const update = (await consentCalls(page)).filter((a) => a[1] === "update").pop()[2];
   expect(update).toMatchObject({ analytics_storage: "granted", ad_storage: "denied" });
 });
 
@@ -116,6 +138,7 @@ test("the choice expires after about 6 months", async ({ page }) => {
 for (const width of [360, 375]) {
   test(`banner covers neither the WhatsApp button nor the hero CTA at ${width}px`, async ({ browser }) => {
     const page = await browser.newPage({ viewport: { width, height: 740 } });
+    await stubGoogle(page);
     await page.goto("/");
     await page.evaluate(() => document.fonts.ready);
     const box = async (sel) => page.locator(sel).first().boundingBox();
@@ -130,6 +153,55 @@ for (const width of [360, 375]) {
 }
 
 test("the site never asks for browser permissions", async () => {
-  const code = ["js/main.js", "js/consent.js", "js/auth.js", "js/auth-state.js", "js/data.js"].map((f) => fs.readFileSync(f, "utf8")).join("\n");
+  const code = ["js/main.js", "js/consent.js", "js/analytics.js", "js/auth.js", "js/auth-state.js", "js/data.js"].map((f) => fs.readFileSync(f, "utf8")).join("\n");
   expect(code).not.toMatch(/geolocation|Notification\.requestPermission|getUserMedia|navigator\.permissions|PushManager|getDisplayMedia/);
+});
+
+/* ---------- GA4 events ---------- */
+const stopNavigation = (page) => page.evaluate(() => document.addEventListener("click", (e) => e.preventDefault()));
+
+test("a click on a WhatsApp link sends whatsapp_click with the page path", async ({ page }) => {
+  await page.goto("/pricing");
+  await page.click(".consent-banner >> text=Reject non-essential");
+  await stopNavigation(page);
+  await page.locator('a[href*="wa.me"]').first().click();
+  const ev = await events(page, "whatsapp_click");
+  expect(ev).toHaveLength(1);
+  expect(ev[0][2]).toMatchObject({ page_path: "/pricing" });
+  // api.whatsapp.com links count too
+  await page.evaluate(() => { const a = document.createElement("a"); a.href = "https://api.whatsapp.com/send?phone=917973353244"; a.id = "t-api"; a.textContent = "x"; document.body.append(a); });
+  await page.click("#t-api");
+  expect(await events(page, "whatsapp_click")).toHaveLength(2);
+});
+
+test("a click on a phone link sends call_click", async ({ page }) => {
+  await page.goto("/contact");
+  await stopNavigation(page);
+  await page.evaluate(() => { const a = document.createElement("a"); a.href = "tel:+917973353244"; a.id = "t-tel"; a.innerHTML = "<span>Call</span>"; document.body.append(a); });
+  await page.click("#t-tel span");
+  const ev = await events(page, "call_click");
+  expect(ev).toHaveLength(1);
+  expect(ev[0][2]).toMatchObject({ page_path: "/contact" });
+  expect(await events(page, "whatsapp_click")).toHaveLength(0);
+});
+
+test("a successful contact form submission sends generate_lead (a failed one does not)", async ({ page }) => {
+  let ok = false;
+  await page.route("**/", (r) => (r.request().method() === "POST"
+    ? r.fulfill({ status: ok ? 200 : 500, body: "" }) : r.fallback()));
+  await page.goto("/contact");
+  await page.click(".consent-banner >> text=Reject non-essential");
+  await page.fill("#c-name", "Dr A");
+  await page.fill("#c-phone", "+91 98765 43210");
+  await page.selectOption("#c-type", { index: 1 });
+  await page.evaluate(() => { window.open = () => null; });      // the failure path opens WhatsApp instead
+  await page.click("form[name=contact] button[type=submit]");
+  await expect(page.locator("form[name=contact] .form-status")).toContainText("WhatsApp");
+  expect(await events(page, "generate_lead")).toHaveLength(0);
+  ok = true;
+  await page.click("form[name=contact] button[type=submit]");
+  await expect(page.locator("#contact-success")).toBeVisible();
+  const ev = await events(page, "generate_lead");
+  expect(ev).toHaveLength(1);
+  expect(ev[0][2]).toMatchObject({ page_path: "/contact", form_name: "contact" });
 });
