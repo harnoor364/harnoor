@@ -3,8 +3,11 @@
   "private": true,
   "type": "module",
   "description": "Checks, monitoring and the AI maintenance agent for the Harnoor Singh portfolio website. Nothing here is served to visitors.",
-  "engines": { "node": ">=20" },
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
+    "build:cloudflare": "node scripts/build-cloudflare.mjs",
     "check:config": "node scripts/check-config.mjs",
     "check:links": "node scripts/check-links.mjs",
     "check:js": "node --check js/main.js && node --check js/data.js",
