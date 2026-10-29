@@ -3,9 +3,9 @@
    and the key parts of the site still work. */
 import { test, expect } from "@playwright/test";
 
-// Never contact Google from tests: answer the GA4 tag and hits with empty responses.
+// Never contact Google or Secure Privacy from tests: answer their scripts and hits with empty responses.
 test.beforeEach(async ({ page }) => {
-  await page.route(/https:\/\/([a-z0-9-]+\.)*(googletagmanager|google-analytics|analytics\.google)\.com\//, (r) =>
+  await page.route(/https:\/\/([a-z0-9-]+\.)*((googletagmanager|google-analytics|analytics\.google)\.com|secureprivacy\.ai)\//, (r) =>
     r.fulfill({ status: 200, contentType: "text/javascript", body: "" }));
 });
 
