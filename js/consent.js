@@ -1,14 +1,15 @@
 /* =====================================================================
    COOKIE CONSENT — banner + preferences (Essential / Analytics / Marketing)
 
-   - Nothing optional loads before the visitor chooses. "Reject non-essential"
-     and closing without choosing both mean: no analytics, no marketing.
+   - No optional cookies are set before the visitor chooses. "Reject non-essential"
+     and closing without choosing both mean: no analytics cookies, no marketing.
    - The choice is saved for 6 months in localStorage ("uw_consent"), then
      the banner asks again. "Cookie settings" (footer) reopens it any time.
-   - Google Analytics: put your GA4 ID in SITE.analyticsId (js/data.js).
-     It is loaded ONLY after "Analytics" is allowed, with Google Consent
-     Mode v2 defaults set to "denied" first. Adding it also needs the CSP
-     changes listed in docs/COOKIES-AND-ANALYTICS.md.
+   - Google Analytics (GA4): the tag is in <head> of every page via
+     js/analytics.js, with Google Consent Mode v2 set to "denied" first.
+     This file only updates consent: Analytics allowed → analytics_storage
+     "granted"; rejected or no choice → stays "denied". Advertising signals
+     (ad_storage, ad_user_data, ad_personalization) always stay "denied".
    - Never asks for browser permissions (location, notifications, camera…).
    ===================================================================== */
 (function () {
@@ -35,34 +36,14 @@
   }
 
   /* ---------- What each category switches on ---------- */
-  let gaLoaded = false;
   function apply(c) {
-    const site = typeof SITE !== "undefined" ? SITE : {};
-    const id = /^G-[A-Z0-9]+$/.test(site.analyticsId || "") ? site.analyticsId : "";
-    if (!id) return;                         // no analytics configured: nothing to load
-    window.dataLayer = window.dataLayer || [];
-    window.gtag = window.gtag || function () { window.dataLayer.push(arguments); };
-    const state = {
+    if (typeof window.gtag !== "function") return;   // tag not on this page
+    window.gtag("consent", "update", {
       analytics_storage: c.analytics ? "granted" : "denied",
-      ad_storage: c.marketing ? "granted" : "denied",
-      ad_user_data: c.marketing ? "granted" : "denied",
-      ad_personalization: c.marketing ? "granted" : "denied"
-    };
-    if (!gaLoaded && c.analytics) {
-      // Consent Mode v2: defaults first (all denied), then the visitor's choice, then load.
-      gtag("consent", "default", { analytics_storage: "denied", ad_storage: "denied", ad_user_data: "denied", ad_personalization: "denied", wait_for_update: 500 });
-      gtag("consent", "update", state);
-      gtag("js", new Date());
-      gtag("config", id, { anonymize_ip: true });
-      const s = document.createElement("script");
-      s.async = true;
-      s.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(id)}`;
-      s.setAttribute("data-consent-category", "analytics");
-      document.head.appendChild(s);
-      gaLoaded = true;
-    } else if (gaLoaded) {
-      gtag("consent", "update", state);    // withdrawing consent stops collection on the next hit
-    }
+      ad_storage: "denied",
+      ad_user_data: "denied",
+      ad_personalization: "denied"
+    });
   }
 
   /* ---------- Banner ---------- */
@@ -113,7 +94,7 @@
           </div>
           <div class="consent-row">
             <input type="checkbox" id="c-analytics" name="analytics">
-            <label for="c-analytics"><strong>Analytics</strong><br><span class="small muted">Counts visits and which pages are useful. Not in use yet; off unless you allow it.</span></label>
+            <label for="c-analytics"><strong>Analytics</strong><br><span class="small muted">Google Analytics counts visits and which pages are useful. Off unless you allow it.</span></label>
           </div>
           <div class="consent-row">
             <input type="checkbox" id="c-marketing" name="marketing">

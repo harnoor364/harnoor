@@ -2,6 +2,12 @@
    so they run without a real Supabase project or real emails. */
 import { test, expect } from "@playwright/test";
 
+// Never contact Google from tests: answer the GA4 tag and hits with empty responses.
+test.beforeEach(async ({ page }) => {
+  await page.route(/https:\/\/([a-z0-9-]+\.)*(googletagmanager|google-analytics|analytics\.google)\.com\//, (r) =>
+    r.fulfill({ status: 200, contentType: "text/javascript", body: "" }));
+});
+
 const SB = "https://testref.supabase.co";
 const b64 = (o) => Buffer.from(JSON.stringify(o)).toString("base64url");
 const jwt = (payload) => `${b64({ alg: "HS256", typ: "JWT" })}.${b64(payload)}.c2ln`;

@@ -270,6 +270,8 @@
             headers: hasFile ? undefined : { "Content-Type": "application/x-www-form-urlencoded" }
           });
           if (!res.ok) throw new Error(res.status);
+          // GA4: a successful enquiry (contact form only, not reviews)
+          if (form.getAttribute("name") === "contact" && typeof window.uwTrack === "function") window.uwTrack("generate_lead", { form_name: "contact" });
           form.reset();
           $$(".star-input-label", form).forEach((l) => (l.textContent = "Tap a star to rate"));
           form.hidden = true;
