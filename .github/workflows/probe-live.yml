@@ -1,0 +1,18 @@
+# Temporary diagnostic: reads the LIVE site's sitemap/robots as Bing would (GET only).
+name: Probe live portal
+on:
+  push:
+    branches: [probe-live]
+permissions:
+  contents: read
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Live files
+        run: |
+          UA="Mozilla/5.0 (compatible; bingbot/2.0; +http://www.bing.com/bingbot.htm)"
+          for u in https://harnoorsingh.in/sitemap.xml https://harnoorsingh.in/robots.txt https://harnoorsingh.in/BingSiteAuth.xml https://www.harnoorsingh.in/sitemap.xml http://harnoorsingh.in/sitemap.xml; do
+            echo "=== $u"; curl -sS -A "$UA" -o body.txt -D - "$u" | grep -i -E "^HTTP|^location|^content-type|^x-robots" | tr -d '\r'
+            head -c 300 body.txt; echo; echo "bytes: $(wc -c < body.txt), urls: $(grep -c '<loc>' body.txt)"
+          done
