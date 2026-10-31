@@ -9,7 +9,7 @@ test.beforeEach(async ({ page }) => {
     r.fulfill({ status: 200, contentType: "text/javascript", body: "" }));
 });
 
-const PAGES = ["index", "portfolio", "pricing", "seo", "reviews", "contact", "doctors", "restaurants", "shops", "services", "hosiery", "thank-you", "404", "signup", "login", "forgot-password", "reset-password", "account", "privacy-policy", "terms", "cookie-policy", "refund-policy"];
+const PAGES = ["index", "portfolio", "pricing", "seo", "reviews", "contact", "doctors", "restaurants", "shops", "services", "hosiery", "thank-you", "404", "signup", "login", "forgot-password", "reset-password", "account", "privacy-policy", "terms", "cookie-policy", "refund-policy", "admin"];
 // Google Fonts may be unreachable in CI sandboxes; the site falls back to system fonts.
 const IGNORE = /fonts\.(googleapis|gstatic)\.com/;
 
