@@ -19,7 +19,7 @@ const ACCESS = () => jwt({ sub: USER.id, role: "authenticated", aud: "authentica
 const session = () => ({ access_token: ACCESS(), refresh_token: "r1", token_type: "bearer", expires_in: 3600, expires_at: now() + 3600, user: USER });
 const PROJECT = { client_name: "Dr A", project_name: "Clinic website", status: "Designing", notes: "Homepage draft sent.\n<b>not bold</b>", updated_at: "2026-10-15T09:00:00Z" };
 
-async function fakeSupabase(page, calls = [], { autoConfirm = false } = {}) {
+async function fakeSupabase(page, calls = [], { autoConfirm = false, content = null, contentStatus = 200, admin = false } = {}) {
   await page.route("**/js/supabase-config.js*", (r) =>
     r.fulfill({ contentType: "text/javascript", body: `window.SUPABASE_CONFIG = ${JSON.stringify({ url: SB, anonKey: ANON })};` }));
   await page.route(`${SB}/**`, async (route) => {
@@ -47,9 +47,16 @@ async function fakeSupabase(page, calls = [], { autoConfirm = false } = {}) {
       return json(403, { code: "otp_expired", error_code: "otp_expired", msg: "Token has expired or is invalid" });
     }
     if (url.pathname === "/rest/v1/client_projects") {
+      if (req.method() === "PATCH") return json(200, [{ user_id: USER.id }]);
       const single = /vnd\.pgrst\.object/.test(req.headers()["accept"] || "");
-      return json(200, single ? PROJECT : [PROJECT]);
+      return json(200, single ? PROJECT : [{ ...PROJECT, user_id: USER.id }]);
     }
+    if (url.pathname === "/rest/v1/site_content") {
+      if (req.method() === "POST") return json(201, []);
+      if (contentStatus !== 200) return json(contentStatus, { message: "down" });
+      return json(200, content || []);
+    }
+    if (url.pathname === "/rest/v1/rpc/is_admin") return json(200, admin);
     return json(404, { msg: "not mocked" });
   });
 }
@@ -229,4 +236,82 @@ test("with email verification switched off, sign-up goes straight to the account
   await page.click("[data-auth-form] button[type=submit]");
   await page.waitForURL("**/account");
   await expect(page.locator("[data-project-name]")).toHaveText("Clinic website");
+});
+
+/* ---------- Editable content (admin panel → site_content) ---------- */
+const EDITED = [
+  { key: "site", value: { phoneDisplay: "+91 90000 00001", whatsapp: "919000000001", email: "new@example.com", location: "Ludhiana", defaultWhatsAppMessage: "Hello!" } },
+  { key: "projects", value: [{ title: "Edited Project <b>x</b>", category: "Bakery", location: "Ludhiana", description: "From the admin panel.", image: "images/projects/ebook-store.svg", url: "", tags: ["Online Orders"], featured: true, note: "" }] },
+  { key: "packages", value: [{ name: "Starter", price: "₹7,777", priceNote: "one-time", tagline: "Edited.", features: ["One page"], popular: true }] }
+];
+
+test("pages show content edited in the admin panel (text stays text)", async ({ page }) => {
+  await fakeSupabase(page, [], { content: EDITED });
+  await page.goto("/");
+  await expect(page.locator(".site-footer [data-site=\"phone-text\"]").first()).toHaveText("+91 90000 00001");
+  await expect(page.getByText("Edited Project <b>x</b>").first()).toBeVisible();      // shown as text, not HTML
+  await expect(page.locator('a[data-wa]').first()).toHaveAttribute("href", /wa\.me\/919000000001/);
+  await page.goto("/pricing");
+  await expect(page.getByText("₹7,777").first()).toBeVisible();
+});
+
+test("if the content database is down, the built-in content stays", async ({ page }) => {
+  await fakeSupabase(page, [], { contentStatus: 503 });
+  await page.goto("/portfolio");
+  await expect(page.getByText("Grace Unisex Salon").first()).toBeVisible();
+  await expect(page.locator(".site-footer [data-site=\"phone-text\"]").first()).toHaveText("+91 79733 53244");
+});
+
+test("admin: a signed-in client who isn't an admin is refused", async ({ page }) => {
+  await fakeSupabase(page, [], { admin: false });
+  await page.goto("/admin");
+  await page.fill("#a-email", "dr.a@example.com");
+  await page.fill("#a-password", "a-good-password");
+  await page.click("[data-admin-login-form] button[type=submit]");
+  await expect(page.locator("[data-admin-denied]")).toBeVisible();
+  await expect(page.locator("[data-admin-app]")).toBeHidden();
+});
+
+test("admin: sign in, edit business details and the portfolio, update a client", async ({ page }) => {
+  const calls = [];
+  await fakeSupabase(page, calls, { admin: true, content: EDITED });
+  await page.goto("/admin");
+  await expect(page.locator("[data-admin-login]")).toBeVisible();
+  await page.fill("#a-email", "dr.a@example.com");
+  await page.fill("#a-password", "a-good-password");
+  await page.click("[data-admin-login-form] button[type=submit]");
+  await expect(page.locator("[data-admin-app]")).toBeVisible();
+  await expect(page.locator("[data-admin-email]")).toHaveText("dr.a@example.com");
+
+  // Business details
+  await expect(page.locator("#site-phoneDisplay")).toHaveValue("+91 90000 00001");
+  await page.fill("#site-phoneDisplay", "+91 98888 77777");
+  await page.click("text=Save business details");
+  await expect(page.locator("#panel-site .form-status")).toContainText("Saved");
+  let post = calls.filter((c) => c.path === "/rest/v1/site_content" && c.method === "POST").pop();
+  expect(post.body).toMatchObject({ key: "site", value: { phoneDisplay: "+91 98888 77777", whatsapp: "919000000001" } });
+
+  // Portfolio: add a project, a required field is checked, then save
+  await page.click("#tab-projects");
+  await page.click("text=Add a project");
+  await page.click("text=Save portfolio");
+  await expect(page.locator("#panel-projects > .form-status")).toContainText("missing a required field");
+  await page.fill("#projects-1-title", "New Bakery Site");
+  await page.fill("#projects-1-tags", "Online Orders\nWhatsApp");
+  await page.click("text=Save portfolio");
+  await expect(page.locator("#panel-projects > .form-status")).toContainText("Saved");
+  post = calls.filter((c) => c.path === "/rest/v1/site_content" && c.method === "POST").pop();
+  expect(post.body.key).toBe("projects");
+  expect(post.body.value.map((p) => p.title)).toEqual(["Edited Project <b>x</b>", "New Bakery Site"]);
+  expect(post.body.value[1].tags).toEqual(["Online Orders", "WhatsApp"]);
+
+  // Client projects
+  await page.click("#tab-clients");
+  await page.fill("#c-name-0", "Clinic website v2");
+  await page.selectOption("#c-status-0", "In review");
+  await page.click("#panel-clients button[type=submit]");
+  await expect(page.locator("#panel-clients .admin-client .form-status")).toContainText("Saved");
+  const patch = calls.find((c) => c.path === "/rest/v1/client_projects" && c.method === "PATCH");
+  expect(patch.body).toMatchObject({ project_name: "Clinic website v2", status: "In review" });
+  expect(patch.query).toContain("user_id=eq.");
 });

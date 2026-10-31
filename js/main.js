@@ -310,5 +310,13 @@
     initStarInput();
     preselectPackage();
     initForms();
+    // Content edited in the admin panel (js/content.js): redraw when it arrives.
+    if (window.uwContentReady) window.uwContentReady.then((changed) => {
+      if (!changed) return;
+      fillSiteInfo();
+      renderProjects();
+      renderReviews();
+      renderPricing();
+    });
   });
 })();
