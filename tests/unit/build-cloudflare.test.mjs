@@ -26,3 +26,20 @@ test("build:cloudflare outputs the public site with netlify.toml's headers", () 
   }
   fs.rmSync(out, { recursive: true, force: true });
 });
+
+test("ADMIN_ONLY=1 (Render) outputs only the admin panel, hidden from search engines", () => {
+  const out = fs.mkdtempSync(path.join(os.tmpdir(), "admin-dist-"));
+  execFileSync(process.execPath, ["scripts/build-cloudflare.mjs"], { env: { ...process.env, OUT_DIR: out, SKIP_GENERATE: "1", ADMIN_ONLY: "1" }, stdio: "pipe" });
+  const has = (f) => fs.existsSync(path.join(out, f));
+  for (const f of ["index.html", "admin.html", "js/admin.js", "js/vendor/supabase-2.116.0.js", "js/supabase-config.js", "css/admin.css", "css/style.css"]) assert.ok(has(f), `missing ${f}`);
+  // no public pages: the website stays on Netlify
+  for (const f of ["pricing.html", "contact.html", "login.html", "js/content.js", "js/analytics.js", "sitemap.xml"]) assert.ok(!has(f), `${f} should not be published`);
+  const html = fs.readFileSync(path.join(out, "index.html"), "utf8");
+  assert.ok(html.includes("data-admin-login-form"), "index.html is the admin panel");
+  assert.ok(!/secureprivacy|googletagmanager/.test(html), "no analytics or consent scripts on the admin host");
+  assert.ok(html.includes('href="https://harnoorsingh.in/pricing"'), "menu links point to the public website");
+  assert.ok(html.includes('href="/images/favicon.svg"'), "icons stay local");
+  assert.equal(fs.readFileSync(path.join(out, "robots.txt"), "utf8"), "User-agent: *\nDisallow: /\n");
+  assert.match(fs.readFileSync(path.join(out, "_headers"), "utf8"), /X-Robots-Tag: noindex, nofollow/);
+  fs.rmSync(out, { recursive: true, force: true });
+});

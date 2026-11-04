@@ -10,6 +10,8 @@
    3. Writes dist/_headers from the [[headers]] blocks in netlify.toml, so the
       security headers (CSP etc.) stay identical: edit them in netlify.toml only.
 
+   With ADMIN_ONLY=1 (used on Render) it publishes only the admin panel instead.
+
    Not needed on Cloudflare: the clean-URL redirects (Cloudflare Pages serves
    /pricing for pricing.html and redirects /pricing.html → /pricing by itself)
    and the domain redirects (set up in the Cloudflare dashboard, see
@@ -27,6 +29,33 @@ const fail = (msg) => { console.error(`build-cloudflare: ${msg}`); process.exit(
 if (process.env.SKIP_GENERATE !== "1") {
   execFileSync(process.execPath, ["scripts/build-config.mjs"], { stdio: "inherit" });
   execFileSync(process.execPath, ["scripts/build-sitemap.mjs"], { stdio: "inherit" });
+}
+
+// ADMIN_ONLY=1 (set on the Render service): publish ONLY the admin panel.
+// The public website stays on Netlify; the admin's menu links point to it.
+if (process.env.ADMIN_ONLY === "1") {
+  const SITE = "https://harnoorsingh.in";
+  fs.rmSync(OUT, { recursive: true, force: true });
+  fs.mkdirSync(OUT, { recursive: true });
+  for (const d of ["css", "images"]) fs.cpSync(path.join(ROOT, d), path.join(OUT, d), { recursive: true });
+  fs.mkdirSync(path.join(OUT, "js/vendor"), { recursive: true });
+  for (const f of ["js/admin.js", "js/data.js", "js/main.js", "js/cookie-settings.js", "js/supabase-config.js", "js/vendor/supabase-2.116.0.js", "js/vendor/supabase-LICENSE.txt"]) {
+    fs.copyFileSync(path.join(ROOT, f), path.join(OUT, f));
+  }
+  for (const f of ["favicon.ico", "site.webmanifest"]) fs.copyFileSync(path.join(ROOT, f), path.join(OUT, f));
+  let html = fs.readFileSync(path.join(ROOT, "admin.html"), "utf8");
+  // No analytics or cookie banner on the private admin host (only the owner uses it).
+  html = html.replace(/\s*<!-- Secure Privacy[^\n]*-->\n\s*<script src="https:\/\/app\.secureprivacy\.ai[^"]*"><\/script>/, "");
+  html = html.replace(/\s*<!-- Google tag[^\n]*-->\n\s*<script src="\/js\/analytics\.js"><\/script>\n\s*<script async src="https:\/\/www\.googletagmanager\.com[^"]*"><\/script>/, "");
+  // Page links go to the public website; files (images, icons, manifest) stay local.
+  html = html.replace(/href="\/(?!images\/|favicon|site\.webmanifest|css\/|js\/)([^"]*)"/g, (_, rest) => `href="${SITE}/${rest}"`);
+  if (/secureprivacy|googletagmanager/.test(html)) fail("admin-only build: could not remove the analytics/consent scripts");
+  fs.writeFileSync(path.join(OUT, "index.html"), html);
+  fs.writeFileSync(path.join(OUT, "admin.html"), html);
+  fs.writeFileSync(path.join(OUT, "robots.txt"), "User-agent: *\nDisallow: /\n");
+  fs.writeFileSync(path.join(OUT, "_headers"), "/*\n  X-Robots-Tag: noindex, nofollow\n  Cache-Control: no-store\n  X-Frame-Options: DENY\n");
+  console.log(`build-cloudflare: ADMIN_ONLY → admin panel only (${path.relative(ROOT, OUT) || OUT})`);
+  process.exit(0);
 }
 
 // 2. Public files only
