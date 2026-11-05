@@ -1,0 +1,17 @@
+# Temporary diagnostic: is BingSiteAuth.xml live on harnoorsingh.in? (GET only)
+name: Probe live portal
+on:
+  push:
+    branches: [probe-live]
+permissions:
+  contents: read
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check
+        run: |
+          sleep 100
+          curl -sS -D - https://harnoorsingh.in/BingSiteAuth.xml -o body.txt | grep -i -E "^HTTP|^content-type|^server"
+          head -c 200 body.txt; echo
+          echo "--- is the site the new version?"; curl -sS https://harnoorsingh.in/ | grep -o -E 'js/content.js|secureprivacy' | sort -u
